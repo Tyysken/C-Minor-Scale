@@ -13,5 +13,10 @@ namespace C_Minor_Scale.Controllers
         {
             return View();
         }
+
+        //public bool checkUser(string username, string password)
+        //{
+
+        //}
     }
 }
