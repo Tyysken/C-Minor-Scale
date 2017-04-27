@@ -160,6 +160,7 @@
                success: function (data) {
                    alert('Success!');
                    localStorage.setItem('user', data.Username)
+                   localStorage.setItem('password', SHA256(email + pass))
                    console.log(localStorage.getItem('user'))
                    window.location.href = '/Home/Index/'
                },
