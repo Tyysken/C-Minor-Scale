@@ -26,11 +26,11 @@ namespace C_Minor_Scale.Controllers
         }
 
         // POST api/<controller>
-        public async Task<IHttpActionResult> Post([FromBody]CreateBookingRequestObject request)
+        public async Task<HttpResponseMessage> Post([FromBody]CreateBookingRequestObject request)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
             }
 
             Booking booking = new Booking
@@ -46,11 +46,11 @@ namespace C_Minor_Scale.Controllers
 
             IEnumerable<string> username, password;
             if (!Request.Headers.TryGetValues("idesk-auth-username", out username)) {
-                return BadRequest("E_AUTH_CREDENTIALS_MISSING");
+                return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "E_AUTH_CREDENTIALS_MISSING");
             }
 
             if (!Request.Headers.TryGetValues("idesk-auth-password", out password)) {
-                return BadRequest("E_NO_PASSWORD");
+                return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "E_NO_PASSWORD");
             }
 
             User user = new Models.User
@@ -59,9 +59,7 @@ namespace C_Minor_Scale.Controllers
                 PasswordHash = password.First()
             };
 
-            //HttpResponseMessage response = await BookingServices.PostBooking(user, booking);
-
-            return Ok();
+            return await BookingServices.PostBooking(user, booking);
         }
 
         // PUT api/<controller>/5

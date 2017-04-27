@@ -8,6 +8,9 @@ using System.Web.Http.Results;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using C_Minor_Scale;
 using C_Minor_Scale.Controllers;
+using System.Threading.Tasks;
+using System.Net;
+using System.Web.Http.Controllers;
 
 namespace C_Minor_Scale.Tests.Controllers
 {
@@ -15,11 +18,11 @@ namespace C_Minor_Scale.Tests.Controllers
     public class BookingApiControllerTest
     {
         [TestMethod]
-        public void Post_CreateBooking_RecieveSuccess()
+        public async Task Post_CreateBooking_RecieveSuccess()
         {
             // Arrange
             BookingApiController controller = new BookingApiController();
-            RequestObjects.CreateBookingRequestObject request = new RequestObjects.CreateBookingRequestObject
+            RequestObjects.CreateBookingRequestObject requestObject = new RequestObjects.CreateBookingRequestObject
             {
                 Owner = "test@test.com",
                 LastModified = (long)DateTimeOffset.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalMilliseconds,
@@ -29,17 +32,25 @@ namespace C_Minor_Scale.Tests.Controllers
                 Subject = "Test booking",
                 Private = true
             };
+            var request = new HttpRequestMessage();
+            request.Headers.Add("idesk-auth-method", "up");
+            request.Headers.Add("idesk-auth-username", "aa.gpost@gmail.com");
+            request.Headers.Add("idesk-auth-password", "c4a6fe62602ccec204e1afd053dc00d7d18dc92d0ceb2ed0f477f3cc6d310be3");
+            request.Headers.Add("Content-Type", "application/vnd.idesk-v5+json");
+            request.Headers.Add("Accept", "application/vnd.idesk-v5+json");
+            var controllerContext = new HttpControllerContext();
+            controllerContext.Request = request;
 
             // Act
-
-            IHttpActionResult result = controller.Post(request);
+            controller.ControllerContext = controllerContext;
+            HttpResponseMessage result = await controller.Post(requestObject);
 
             // Assert
-            Assert.AreEqual(typeof(OkResult), result.GetType());
+            Assert.AreEqual(HttpStatusCode.OK, result.StatusCode);
         }
 
         [TestMethod]
-        public void Post_CreateBooking_Recieve4XX()
+        public async Task Post_CreateBooking_RecieveError()
         {
             // Arrange
             BookingApiController controller = new BookingApiController();
@@ -52,12 +63,14 @@ namespace C_Minor_Scale.Tests.Controllers
                 Zid = -1,
                 Subject = "Test booking",
                 Private = true
-            }; // Invalid Zid
+            };
+            // Invalid Zid and no headers
 
             // Act
+            HttpResponseMessage result = await controller.Post(request);
 
-            IHttpActionResult result = controller.Post(request);
-            Assert.AreNotEqual(typeof(OkResult), result.GetType());
+            // Assert
+            Assert.AreNotEqual(HttpStatusCode.OK, result.StatusCode);
         }
     }
 }

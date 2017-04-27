@@ -11,16 +11,16 @@ namespace C_Minor_Scale.RequestObjects
         [Required]
         public string Owner { get; set; }
 
-        [Range(minimum: 1, maximum: int.MaxValue)]
+        [Range(minimum: 1, maximum: long.MaxValue)]
         public long LastModified { get; set; }
 
-        [Range(minimum: 1, maximum: int.MaxValue)]
+        [Range(minimum: 1, maximum: long.MaxValue)]
         public long From { get; set; }
 
-        [Range(minimum: 1, maximum: int.MaxValue)]
+        [Range(minimum: 1, maximum: long.MaxValue)]
         public long Until { get; set; }
 
-        [Range(minimum: 1, maximum: int.MaxValue)]
+        [Range(minimum: 1, maximum: long.MaxValue)]
         public long Zid { get; set; }
 
         [Required]
