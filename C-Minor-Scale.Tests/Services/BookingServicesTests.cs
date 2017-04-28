@@ -19,8 +19,8 @@ namespace C_Minor_Scale.Tests.Services
             //Act
             var response = await BookingServices.PostBooking(new User
             {
-                Email = "henot294@gmail.com",
-                PasswordHash = "10c0968211f1f6b5dd4f50d62cbd10e3c9cd95c3bd8cc19c0bcf836fc23c8c07"
+                Email = "",
+                PasswordHash = ""
             }, new Booking
             {
                 Owner = "henot294@gmail.com",
