@@ -13,5 +13,10 @@ namespace C_Minor_Scale.Controllers
         {
             return View();
         }
+
+        public ActionResult Bookings()
+        {
+            return View();
+        }
     }
 }
