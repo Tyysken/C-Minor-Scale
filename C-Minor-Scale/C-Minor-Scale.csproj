@@ -250,11 +250,13 @@
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
+    <Compile Include="RequestObjects\CreateBookingMultiRequestObject.cs" />
     <Compile Include="RequestObjects\CreateBookingRequestObject.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
     <Compile Include="Services\BookingServices.cs" />
     <Compile Include="Services\UserServices.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ValidationAttributes\ZidListValidationAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\HelpPage\HelpPage.css" />
