@@ -10,7 +10,7 @@ using System.Web;
 
 namespace C_Minor_Scale.Services
 {
-    public class UserServices
+    public static class UserServices
     {
         private const string ApiBaseUrl = "https://stage-core.intelligentdesk.com/v3/user/";
 
@@ -23,7 +23,7 @@ namespace C_Minor_Scale.Services
                 PrepareHttpClient(httpClient, user);
                 string apiUrl = ApiBaseUrl + user.Username;
                 response = await httpClient.GetAsync(apiUrl);
-                var contents = await response.Content.ReadAsStringAsync();
+                user.Parent = JsonConvert.DeserializeObject<User>(await response.Content.ReadAsStringAsync()).Parent;
             }
 
             return user;

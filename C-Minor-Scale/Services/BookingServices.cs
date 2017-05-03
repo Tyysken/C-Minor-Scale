@@ -16,20 +16,48 @@ namespace C_Minor_Scale.Services
         private const long teacherId = 6570433172733952;
         private const long studentId = 5124030458232832;
 
+        /// <summary>
+        /// Books one zone
+        /// </summary>
+        /// <param name="user">The user doing the booking</param>
+        /// <param name="booking">The booking</param>
+        /// <returns>The response message from the Rol API</returns>
         public static async Task<HttpResponseMessage> PostBooking(User user, Booking booking)
         {
             // TODO: Check if user is high prio, check if zone is booked. Cancel booking if user is of higher prio
             return await SendBookingToRol(user, booking);
         }
 
+        /// <summary>
+        /// Book multiple zones at once. The user must be a teacher
+        /// </summary>
+        /// <param name="user">The user doing the booking</param>
+        /// <param name="bookings">The list of bookings to do</param>
+        /// <returns>The list of response messages received from the Rol API</returns>
         public static async Task<List<HttpResponseMessage>> PostMultipleBookings(User user, List<Booking> bookings)
         {
-            // TODO: For each booking in the list run PostBooking
+            if(user.Parent == 0)
+            {
+                user = await UserServices.GetUser(user);
+            }
 
             List<HttpResponseMessage> responseList = new List<HttpResponseMessage>();
-            HttpResponseMessage response = new HttpResponseMessage();
-            response.StatusCode = System.Net.HttpStatusCode.NotImplemented;
-            responseList.Add(response);
+
+            if (user.Parent == teacherId)
+            {
+                foreach (var booking in bookings)
+                {
+                    var response = await PostBooking(user, booking);
+                    responseList.Add(response);
+                }
+            }
+            else
+            {
+                var response = new HttpResponseMessage();
+                response.StatusCode = System.Net.HttpStatusCode.Forbidden;
+                responseList.Add(response);
+            }
+            
             return responseList;
         }
 
