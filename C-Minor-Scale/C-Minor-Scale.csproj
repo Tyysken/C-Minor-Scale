@@ -255,6 +255,7 @@
     <Compile Include="Results\ChallengeResult.cs" />
     <Compile Include="Services\BookingServices.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ValidationAttributes\ZidListValidationAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\HelpPage\HelpPage.css" />

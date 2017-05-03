@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
+using C_Minor_Scale.ValidationAttributes;
 
 namespace C_Minor_Scale.RequestObjects
 {
@@ -20,7 +21,7 @@ namespace C_Minor_Scale.RequestObjects
         [Range(minimum: 1, maximum: long.MaxValue)]
         public long Until { get; set; }
 
-        [Range(minimum: 1, maximum: long.MaxValue)]
+        [ZidListValidation(ErrorMessage = "One or more zids is out of range.")]
         public List<long> Zids { get; set; }
 
         [Required]

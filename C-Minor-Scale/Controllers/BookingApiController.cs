@@ -14,18 +14,21 @@ namespace C_Minor_Scale.Controllers
     public class BookingApiController : ApiController
     {
         // GET api/<controller>
+        [ActionName("DefaultAction")]
         public IEnumerable<string> Get()
         {
             return new string[] { "value1", "value2" };
         }
 
         // GET api/<controller>/5
+        [ActionName("DefaultAction")]
         public string Get(int id)
         {
             return "value";
         }
 
         // POST api/<controller>
+        [ActionName("DefaultAction")]
         public async Task<HttpResponseMessage> Post([FromBody]CreateBookingRequestObject request)
         {
             if (!ModelState.IsValid)
@@ -66,15 +69,56 @@ namespace C_Minor_Scale.Controllers
         [HttpPost]
         public async Task<HttpResponseMessage> Multi([FromBody]CreateBookingMultiRequestObject request)
         {
-            return new HttpResponseMessage();
+            if (!ModelState.IsValid)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+            }
+
+            var bookings = new List<Booking>();
+            foreach (long zid in request.Zids)
+            {
+                Booking booking = new Booking
+                {
+                    Owner = request.Owner,
+                    LastModified = request.LastModified,
+                    From = request.From,
+                    Until = request.Until,
+                    Zid = zid,
+                    Subject = request.Subject,
+                    Private = request.Private
+                };
+
+                bookings.Add(booking);
+            }
+
+            IEnumerable<string> username, password;
+            if (!Request.Headers.TryGetValues("idesk-auth-username", out username))
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "E_AUTH_CREDENTIALS_MISSING");
+            }
+
+            if (!Request.Headers.TryGetValues("idesk-auth-password", out password))
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "E_NO_PASSWORD");
+            }
+
+            User user = new Models.User
+            {
+                Email = username.First(),
+                PasswordHash = password.First()
+            };
+
+            return (await BookingServices.PostMultipleBookings(user, bookings)).First();
         }
 
         // PUT api/<controller>/5
+        [ActionName("DefaultAction")]
         public void Put(int id, [FromBody]string value)
         {
         }
 
         // DELETE api/<controller>/5
+        [ActionName("DefaultAction")]
         public void Delete(int id)
         {
         }
