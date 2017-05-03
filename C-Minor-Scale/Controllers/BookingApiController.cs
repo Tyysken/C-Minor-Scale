@@ -62,6 +62,13 @@ namespace C_Minor_Scale.Controllers
             return await BookingServices.PostBooking(user, booking);
         }
 
+        // POST api/<controller>
+        [HttpPost]
+        public async Task<HttpResponseMessage> Multi([FromBody]CreateBookingMultiRequestObject request)
+        {
+            return new HttpResponseMessage();
+        }
+
         // PUT api/<controller>/5
         public void Put(int id, [FromBody]string value)
         {
