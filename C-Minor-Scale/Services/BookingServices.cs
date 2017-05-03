@@ -22,20 +22,15 @@ namespace C_Minor_Scale.Services
             return await SendBookingToRol(user, booking);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="user"></param>
-        /// <param name="bookings"></param>
-        /// <returns>
-        /// Success when all bookings worked
-        /// Partial when some of the bookings worked
-        /// Failed when none of the bookings worked
-        /// </returns>
-        public static async Task<string> PostMultipleBookings(User user, List<Booking> bookings)
+        public static async Task<List<HttpResponseMessage>> PostMultipleBookings(User user, List<Booking> bookings)
         {
             // TODO: For each booking in the list run PostBooking
-            return "Not yet implemented";
+
+            List<HttpResponseMessage> responseList = new List<HttpResponseMessage>();
+            HttpResponseMessage response = new HttpResponseMessage();
+            response.StatusCode = System.Net.HttpStatusCode.NotImplemented;
+            responseList.Add(response);
+            return responseList;
         }
 
         private static async Task<HttpResponseMessage> CancelBookingAtRol(User user)
