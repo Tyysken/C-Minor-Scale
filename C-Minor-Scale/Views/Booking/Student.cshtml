@@ -32,20 +32,6 @@
 
     $(document).ready(function () {
 
-        //$("#startTime").change(function () {
-
-        //    startTime.setHours(document.getElementById('startTime').value.split(':')[0])
-        //    startTime.setMinutes(document.getElementById('startTime').value.split(':')[1])
-        //    console.log(startTime)
-        //})
-        //$("#endTime").change(function () {
-
-        //    endTime.setHours(document.getElementById('endTime').value.split(':')[0])
-        //    endTime.setMinutes(document.getElementById('endTime').value.split(':')[1])
-        //    console.log(endTime)
-        //})
-   
-
            $.ajax({
                url: "https://stage-core.intelligentdesk.com/zone?realm=true&parent=5115225993379840",
                type: "GET",
@@ -62,8 +48,6 @@
                    {
                        if (data[i].Type == 'DESK')
                        {
-                           //console.log(data[i].Zid);
-
 
                            var button = document.createElement("input")
                            button.value = data[i].Name
@@ -85,8 +69,6 @@
                            
                        }
                    }
-                   console.log(data)
-                //   window.location.href = '/Home/Index/'
                },
 
                error: function (data) {
@@ -98,8 +80,6 @@
 
 
     function book(Lastmodified, Zid) {
-        console.log("Lastmodified:" + Lastmodified);
-        console.log("Zid:" + Zid);
 
         return function () {
             var startTime = new Date(document.getElementById('date').value)
@@ -107,34 +87,35 @@
 
             startTime.setHours(document.getElementById('startTime').value.split(':')[0])
             startTime.setMinutes(document.getElementById('startTime').value.split(':')[1])
-            console.log(startTime)
+            //console.log(startTime)
 
             endTime.setHours(document.getElementById('endTime').value.split(':')[0])
             endTime.setMinutes(document.getElementById('endTime').value.split(':')[1])
-            console.log(endTime)
+            //console.log(endTime)
 
             startTime = Math.round(startTime / 1000.0)
             endTime = Math.round(endTime / 1000.0)
-            console.log(
-                JSON.stringify({
-                    "Owner": localStorage.getItem("user"),
-                    "Lastmodified": Lastmodified,
-                    "From": startTime,
-                    "Until": endTime,
-                    "Zid": Zid,
-                    "Subject": "bookingtest",
-                    "Private": "false"
+            //console.log(
+            //    JSON.stringify({
+            //        "Owner": localStorage.getItem("user"),
+            //        "Lastmodified": Lastmodified,
+            //        "From": startTime,
+            //        "Until": endTime,
+            //        "Zid": Zid,
+            //        "Subject": "bookingtest",
+            //        "Private": "false"
 
-                }))
+            //    }))
 
             $.ajax({
-                url: "https://stage-booking.intelligentdesk.com/booking",
+                url: "http://localhost:60156/api/bookingapi",
                 type: "POST",
                 headers: {
                     'idesk-auth-method': 'up',
                     'idesk-auth-username': localStorage.getItem('user'),
                     'idesk-auth-password': localStorage.getItem('password'),
-                    'Accept': 'application/vnd.idesk-v5+json'
+                    'Accept': 'application/json',
+                    //'Accept': 'application/vnd.idesk-v5+json'
                 },
                 data: JSON.stringify({
                     "Owner": localStorage.getItem("user"),
@@ -146,10 +127,11 @@
                     "Private": "false"
 
                 }),
-                contentType: 'application/vnd.idesk-v5+json',
+                contentType: 'application/json',
+                //contentType: 'application/vnd.idesk-v5+json',
                 success: function (data) {
                     alert('Success!');
-                    console.log(data)
+                    //console.log(data)
                 },
 
                 error: function (data) {

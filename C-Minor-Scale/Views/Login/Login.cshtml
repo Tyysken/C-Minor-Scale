@@ -19,8 +19,7 @@
     @*}*@
 </div>
 
-<script src="http://code.jquery.com/jquery-latest.min.js"
-        type="text/javascript"></script>
+<script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
 <script>
     function SHA256(s) {
         var chrsz = 8;
@@ -145,8 +144,8 @@
         $("#signin").click(function () {
            var email = $("#inputEmail").val();
            var pass = $("#inputPassword").val();
-            console.log(email+pass)
-            console.log(SHA256(email+pass))
+            //console.log(email+pass)
+            //console.log(SHA256(email+pass))
            $.ajax({
                url: "https://stage-core.intelligentdesk.com/v3/user/"+email,
                type: "GET",
@@ -160,8 +159,8 @@
                success: function (data) {
                    alert('Success!');
                    localStorage.setItem('user', data.Username)
-                   localStorage.setItem('password', SHA256(email + pass))
-                   console.log(localStorage.getItem('user'))
+                   localStorage.setItem('password', SHA256(email+pass))
+                   //console.log(localStorage.getItem('user'))
                    window.location.href = '/Home/Index/'
                },
 
