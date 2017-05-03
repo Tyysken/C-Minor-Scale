@@ -71,12 +71,6 @@ namespace C_Minor_Scale.Controllers
         [HttpPost]
         public async Task<HttpResponseMessage> Multi([FromBody]CreateBookingMultiRequestObject request)
         {
-
-            if (!ModelState.IsValid)
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
-            }
-
             IEnumerable<string> username, password;
             if (!Request.Headers.TryGetValues("idesk-auth-username", out username))
             {
@@ -97,6 +91,11 @@ namespace C_Minor_Scale.Controllers
             if (await UserServices.GetUserRole(user) != UserServices.Role.Teacher)
             {
                 return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "E_MISSING_ROLE");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
             }
 
             var bookings = new List<Booking>();
