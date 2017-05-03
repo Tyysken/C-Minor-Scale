@@ -108,7 +108,14 @@ namespace C_Minor_Scale.Controllers
                 PasswordHash = password.First()
             };
 
-            return await BookingServices.PostMultipleBookings(user, bookings);
+            var booked = await BookingServices.PostMultipleBookings(user, bookings);
+
+            if (booked.Count == request.Zids.Count)
+                return Request.CreateResponse(HttpStatusCode.OK);
+            else if (booked.Count == 0)
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "All bookings failed.");
+            else
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Seats booked: " + string.Join(", ", booked));
         }
 
         // PUT api/<controller>/5
