@@ -104,11 +104,11 @@ namespace C_Minor_Scale.Controllers
 
             User user = new Models.User
             {
-                Email = username.First(),
+                Username = username.First(),
                 PasswordHash = password.First()
             };
 
-            return (await BookingServices.PostMultipleBookings(user, bookings)).First();
+            return await BookingServices.PostMultipleBookings(user, bookings);
         }
 
         // PUT api/<controller>/5
