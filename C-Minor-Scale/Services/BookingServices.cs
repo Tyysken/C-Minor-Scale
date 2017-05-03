@@ -34,31 +34,20 @@ namespace C_Minor_Scale.Services
         /// <param name="user">The user doing the booking</param>
         /// <param name="bookings">The list of bookings to do</param>
         /// <returns>The list of response messages received from the Rol API</returns>
-        public static async Task<List<HttpResponseMessage>> PostMultipleBookings(User user, List<Booking> bookings)
+        public static async Task<List<long>> PostMultipleBookings(User user, List<Booking> bookings)
         {
-            if(user.Parent == 0)
-            {
-                user = await UserServices.GetUser(user);
-            }
+            List<long> successfulBookings = new List<long>();
 
-            List<HttpResponseMessage> responseList = new List<HttpResponseMessage>();
-
-            if (user.Parent == teacherId)
+            foreach (var booking in bookings)
             {
-                foreach (var booking in bookings)
+                var response = await PostBooking(user, booking);
+                if (response.StatusCode == System.Net.HttpStatusCode.OK)
                 {
-                    var response = await PostBooking(user, booking);
-                    responseList.Add(response);
+                    successfulBookings.Add(booking.Zid);
                 }
             }
-            else
-            {
-                var response = new HttpResponseMessage();
-                response.StatusCode = System.Net.HttpStatusCode.Forbidden;
-                responseList.Add(response);
-            }
             
-            return responseList;
+            return successfulBookings;
         }
 
         private static async Task<HttpResponseMessage> CancelBookingAtRol(User user)
