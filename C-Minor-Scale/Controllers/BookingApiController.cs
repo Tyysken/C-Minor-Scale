@@ -48,11 +48,13 @@ namespace C_Minor_Scale.Controllers
             };
 
             IEnumerable<string> username, password;
-            if (!Request.Headers.TryGetValues("idesk-auth-username", out username)) {
+            if (!Request.Headers.TryGetValues("idesk-auth-username", out username))
+            {
                 return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "E_AUTH_CREDENTIALS_MISSING");
             }
 
-            if (!Request.Headers.TryGetValues("idesk-auth-password", out password)) {
+            if (!Request.Headers.TryGetValues("idesk-auth-password", out password))
+            {
                 return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "E_NO_PASSWORD");
             }
 
@@ -69,9 +71,32 @@ namespace C_Minor_Scale.Controllers
         [HttpPost]
         public async Task<HttpResponseMessage> Multi([FromBody]CreateBookingMultiRequestObject request)
         {
+
             if (!ModelState.IsValid)
             {
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
+            }
+
+            IEnumerable<string> username, password;
+            if (!Request.Headers.TryGetValues("idesk-auth-username", out username))
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "E_AUTH_CREDENTIALS_MISSING");
+            }
+
+            if (!Request.Headers.TryGetValues("idesk-auth-password", out password))
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "E_NO_PASSWORD");
+            }
+
+            User user = new User
+            {
+                Username = username.First(),
+                PasswordHash = password.First()
+            };
+
+            if (await UserServices.GetUserRole(user) != UserServices.Role.Teacher)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "E_MISSING_ROLE");
             }
 
             var bookings = new List<Booking>();
@@ -90,23 +115,6 @@ namespace C_Minor_Scale.Controllers
 
                 bookings.Add(booking);
             }
-
-            IEnumerable<string> username, password;
-            if (!Request.Headers.TryGetValues("idesk-auth-username", out username))
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "E_AUTH_CREDENTIALS_MISSING");
-            }
-
-            if (!Request.Headers.TryGetValues("idesk-auth-password", out password))
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "E_NO_PASSWORD");
-            }
-
-            User user = new Models.User
-            {
-                Username = username.First(),
-                PasswordHash = password.First()
-            };
 
             var booked = await BookingServices.PostMultipleBookings(user, bookings);
 
