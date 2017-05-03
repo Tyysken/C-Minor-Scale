@@ -13,6 +13,8 @@ namespace C_Minor_Scale.Services
     public static class BookingServices
     {
         private const string ApiBaseUrl = "https://stage-booking.intelligentdesk.com/booking/";
+        private const long teacherId = 6570433172733952;
+        private const long studentId = 5124030458232832;
 
         public static async Task<HttpResponseMessage> PostBooking(User user, Booking booking)
         {
@@ -60,7 +62,7 @@ namespace C_Minor_Scale.Services
         private static void PrepareHttpClient(HttpClient client, User user)
         {
             client.DefaultRequestHeaders.TryAddWithoutValidation("idesk-auth-method", "up");
-            client.DefaultRequestHeaders.TryAddWithoutValidation("idesk-auth-username", user.Email);
+            client.DefaultRequestHeaders.TryAddWithoutValidation("idesk-auth-username", user.Username);
             client.DefaultRequestHeaders.TryAddWithoutValidation("idesk-auth-password", user.PasswordHash);
             client.DefaultRequestHeaders.Add("Accept", "application/vnd.idesk-v5+json");
         }
