@@ -113,9 +113,9 @@ namespace C_Minor_Scale.Controllers
             if (booked.Count == request.Zids.Count)
                 return Request.CreateResponse(HttpStatusCode.OK);
             else if (booked.Count == 0)
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "All bookings failed.");
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "E_MULTI_BOOKING_FAILED");
             else
-                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Seats booked: " + string.Join(", ", booked));
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "E_MULTI_BOOKING_PARTIALLY_FAILED");
         }
 
         // PUT api/<controller>/5
