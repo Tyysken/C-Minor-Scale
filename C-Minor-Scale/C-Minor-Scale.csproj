@@ -253,6 +253,7 @@
     <Compile Include="RequestObjects\CreateBookingRequestObject.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
     <Compile Include="Services\BookingServices.cs" />
+    <Compile Include="Services\UserServices.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>

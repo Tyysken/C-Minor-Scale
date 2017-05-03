@@ -7,7 +7,8 @@ namespace C_Minor_Scale.Models
 {
     public class User
     {
-        public string Email { get; set; }
+        public string Username { get; set; }
         public string PasswordHash { get; set; }
+        public long Parent { get; set; }
     }
 }

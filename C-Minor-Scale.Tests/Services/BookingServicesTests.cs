@@ -19,7 +19,7 @@ namespace C_Minor_Scale.Tests.Services
             //Act
             var response = await BookingServices.PostBooking(new User
             {
-                Email = "",
+                Username = "",
                 PasswordHash = ""
             }, new Booking
             {

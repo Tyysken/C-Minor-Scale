@@ -13,6 +13,8 @@ namespace C_Minor_Scale.Services
     public static class BookingServices
     {
         private const string ApiBaseUrl = "https://stage-booking.intelligentdesk.com/booking/";
+        private const long teacherId = 6570433172733952;
+        private const long studentId = 5124030458232832;
 
         public static async Task<HttpResponseMessage> PostBooking(User user, Booking booking)
         {
@@ -20,15 +22,20 @@ namespace C_Minor_Scale.Services
             return await SendBookingToRol(user, booking);
         }
 
-        public static async Task<List<HttpResponseMessage>> PostMultipleBookings(User user, List<Booking> bookings)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="bookings"></param>
+        /// <returns>
+        /// Success when all bookings worked
+        /// Partial when some of the bookings worked
+        /// Failed when none of the bookings worked
+        /// </returns>
+        public static async Task<string> PostMultipleBookings(User user, List<Booking> bookings)
         {
             // TODO: For each booking in the list run PostBooking
-
-            List<HttpResponseMessage> responseList = new List<HttpResponseMessage>();
-            HttpResponseMessage response = new HttpResponseMessage();
-            response.StatusCode = System.Net.HttpStatusCode.NotImplemented;
-            responseList.Add(response);
-            return responseList;
+            return "Not yet implemented";
         }
 
         private static async Task<HttpResponseMessage> CancelBookingAtRol(User user)
@@ -60,7 +67,7 @@ namespace C_Minor_Scale.Services
         private static void PrepareHttpClient(HttpClient client, User user)
         {
             client.DefaultRequestHeaders.TryAddWithoutValidation("idesk-auth-method", "up");
-            client.DefaultRequestHeaders.TryAddWithoutValidation("idesk-auth-username", user.Email);
+            client.DefaultRequestHeaders.TryAddWithoutValidation("idesk-auth-username", user.Username);
             client.DefaultRequestHeaders.TryAddWithoutValidation("idesk-auth-password", user.PasswordHash);
             client.DefaultRequestHeaders.Add("Accept", "application/vnd.idesk-v5+json");
         }
