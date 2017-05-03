@@ -12,7 +12,25 @@ namespace C_Minor_Scale.Services
 {
     public static class UserServices
     {
+        public enum Role { Teacher, Student, None };
         private const string ApiBaseUrl = "https://stage-core.intelligentdesk.com/v3/user/";
+        private const long teacherId = 6570433172733952;
+        private const long studentId = 5124030458232832;
+
+        public static async Task<Role> GetUserRole(User user)
+        {
+            user = await GetUser(user);
+
+            switch(user.Parent)
+            {
+                case teacherId:
+                    return Role.Teacher;
+                case studentId:
+                    return Role.Student;
+                default:
+                    return Role.None;
+            }
+        }
 
         public static async Task<User> GetUser(User user)
         {
