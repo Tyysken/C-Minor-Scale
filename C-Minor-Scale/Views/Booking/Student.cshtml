@@ -8,26 +8,27 @@
     <h1>Booking</h1>
     <p class="lead">Here you are able to book a seat in one of our computer labs. We hope this will make your studies here at Jönköping University more pleasant. </p>
     @*<p><a href="http://asp.net" class="btn btn-primary btn-lg">Booking &raquo;</a></p>*@
+
+    <input type="button" class="btn btn-primary btn-lg" id="bookingButton" value="Book"/>
 </div>
 <div class="container">
     <div class="row">
 
-        <input type="date" id="date" />
-        <input type="time" id="startTime" />
-        <input type="time" id="endTime" />
-        <input type="button" id="bookButton" value="Look for a desk" />
+        <input type="date" id="date"/>
+        @*<input type="time" id="startTime" />
+        <input type="time" id="endTime" />*@
+        <input type="button" id="dateButton" value="Look for a desk" />
 
         <div id="Desks">
-            <div class="col-md-4" id="2440">
-                <h2>Computerlab 2440</h2>
-                <span class="button-checkbox">
-                        <button type="button" class="btn" data-color="default">Default</button>
-                        <input type="checkbox" class="hidden" checked />
-                    
-                </span>
+            <div class="col-lg-12">
+                <div data-toggle="collapse" class="col-lg-12" data-target="#2440"><h2>Computerlab 2440</h2></div>
+                <div class="col-lg-12 collapse" id="2440"></div>
             </div>
-            <div class="col-md-4" id="1330">
-                <h2>Computerlab 1330</h2>
+
+            <div class="col-lg-12">
+                <div data-toggle="collapse" class="col-lg-12" data-target="#1330"><h2>Computerlab 1330</h2></div>
+                <div class="col-lg-12 collapse" id="1330">
+                </div>
             </div>
         </div>
     </div>
@@ -38,34 +39,75 @@
     <script>
         var listOfBookings = [];
         $(document).ready(function () {
-            var startT = 1493834400000;
-            var endT = 1493841600000;
+            document.getElementById("date").valueAsDate = new Date()
+            var LookFromTime = new Date(document.getElementById('date').value)
+            var LookTooTime = new Date(document.getElementById('date').value)
+            LookFromTime.setHours('08')
+            LookFromTime.setMinutes('00')
+            LookFromTime.setSeconds('00')
+            LookFromTime.setMilliseconds('00')
+            LookTooTime.setHours('18')
+            LookTooTime.setMinutes('00')
+            LookTooTime.setSeconds('00')
+            LookTooTime.setMilliseconds('00')
+            LookFromTime = Math.round(LookFromTime)
+            LookTooTime = Math.round(LookTooTime)
+            console.log(LookFromTime, LookTooTime)
 
-            $.ajax({
+            StatusOfDesks(LookFromTime, LookTooTime)
 
-                url: "https://stage-booking.intelligentdesk.com/booking?from=" + startT + "&until=" + endT + "&parent=5115225993379840",
-                type: "GET",
-                headers: {
-                    'idesk-auth-method': 'up',
-                    'idesk-auth-username': localStorage.getItem("user"),
-                    'idesk-auth-password': localStorage.getItem('password'),
-                    'Accept': 'application/vnd.idesk-v5+json'
-                },
-                contentType: 'application/vnd.idesk-v5+json',
-                success: function (data) {
-                    alert('Yaaay!');
-                    console.log(data)
-                    listOfBookings = data
-                    desks()
+           
+            $("#dateButton").click(function () {
+                var newTimeFrom = new Date(document.getElementById('date').value)
+                var newTimeToo = new Date(document.getElementById('date').value)
+                newTimeFrom.setHours('08')
+                newTimeFrom.setMinutes('00')
+                newTimeFrom.setSeconds('00')
+                newTimeFrom.setMilliseconds('00')
+                newTimeToo.setHours('18')
+                newTimeToo.setMinutes('00')
+                newTimeToo.setSeconds('00')
+                newTimeToo.setMilliseconds('00')
+                newTimeFrom = Math.round(newTimeFrom)
+                newTimeToo = Math.round(newTimeToo)
+                console.log('This an another day' + newTimeFrom, newTimeToo)
 
-                },
-
-                error: function (data) {
-                    alert(JSON.parse(data.responseText).Message);
-                }
+                StatusOfDesks(newTimeFrom, newTimeToo)
             });
+
+           
         })
 
+        function date() {
+           
+        }
+
+
+        function StatusOfDesks(LookFromTime, LookTooTime) {
+        $.ajax({
+
+            url: "https://stage-booking.intelligentdesk.com/booking?from=" + LookFromTime + "&until=" + LookTooTime + "&parent=5115225993379840",
+            type: "GET",
+            headers: {
+                'idesk-auth-method': 'up',
+                'idesk-auth-username': localStorage.getItem("user"),
+                'idesk-auth-password': localStorage.getItem('password'),
+                'Accept': 'application/vnd.idesk-v5+json'
+            },
+            contentType: 'application/vnd.idesk-v5+json',
+            success: function (data) {
+                alert('Yaaay!');
+                console.log(data)
+                listOfBookings = data
+                desks()
+
+            },
+
+            error: function (data) {
+                alert(JSON.parse(data.responseText).Message);
+            }
+        });
+        }
 
         function desks() {
             $.ajax({
@@ -81,6 +123,12 @@
                 success: function (data) {
                     alert('Success!');
 
+                    var parentdivRoom1 = document.getElementById('2440')
+                    $(parentdivRoom1).empty()
+
+                    var parentdivRoom2 = document.getElementById('1330')
+                    $(parentdivRoom2).empty()
+
                     for (var i = 0; i < data.length; i++) {
                         var timeButtons = 5
                         if (data[i].Type == 'DESK') {
@@ -92,8 +140,8 @@
                             $(Desk).click(book(data[i].LastModified, data[i].Zid)) //ÄNDRA SEN
 
                             if (data[i].Name.split(" ")[1] < 5) {
-                                var parentdiv = document.getElementById('2440')
-                                parentdiv.appendChild(Desk)
+                               
+                                parentdivRoom1.appendChild(Desk)
 
 
                                 for (var j = 0; j < timeButtons; j++) {
@@ -101,6 +149,9 @@
                                     var span = document.createElement('span')
                                     span.setAttribute("class", "button-checkbox")
                                     
+                                    var checkBox = document.createElement('input')
+                                    checkBox.setAttribute("class", "hidden")
+                                    checkBox.type = "checkbox"
                                     
 
                                     var button = document.createElement('button')
@@ -117,103 +168,142 @@
                                     if (j == 0) {
                                         button.innerHTML = "08-10"
 
-                                        var buttonTime = new Date()
-                                        buttonTime.setHours('08')
-                                        buttonTime.setMinutes('00')
-                                        buttonTime.setSeconds('00')
-                                        buttonTime.setMilliseconds('00')
-                                        buttonTime = Math.round(buttonTime)
-                                        console.log("ButtonTime"+buttonTime)
+                                        var buttonTimeStart = new Date()
+                                        var buttonTimeEnd = new Date()
+                                        buttonTimeStart.setHours('08')
+                                        buttonTimeStart.setMinutes('00')
+                                        buttonTimeStart.setSeconds('00')
+                                        buttonTimeStart.setMilliseconds('00')
+                                        buttonTimeStart = Math.round(buttonTimeStart)
 
-                                        if (buttonTime == timeBooked)
+                                        buttonTimeEnd.setHours('10')
+                                        buttonTimeEnd.setMinutes('00')
+                                        buttonTimeEnd.setSeconds('00')
+                                        buttonTimeEnd.setMilliseconds('00')
+                                        buttonTimeEnd = Math.round(buttonTimeEnd)
+        
+
+                                        if (buttonTimeStart == timeBooked)
                                             button.style.backgroundColor = "red"
                                         else
                                             button.style.backgroundColor = "green"
 
-                                     //   $('<span />').addClass('button-checkbox').html(button);
+                                        checkBox.setAttribute("value", data[i].Zid + "-" + buttonTimeStart + "-" + buttonTimeEnd)
                                         span.appendChild(button)
                                     }
                                     else if (j == 1) {
                                         button.innerHTML = ("10-12")
-                                        var buttonTime = new Date()
-                                        buttonTime.setHours('10')
-                                        buttonTime.setMinutes('00')
-                                        buttonTime.setSeconds('00')
-                                        buttonTime.setMilliseconds('00')
-                                        buttonTime = Math.round(buttonTime)
+                                        var buttonTimeStart = new Date()
+                                        var buttonTimeEnd = new Date()
+                                        buttonTimeStart.setHours('10')
+                                        buttonTimeStart.setMinutes('00')
+                                        buttonTimeStart.setSeconds('00')
+                                        buttonTimeStart.setMilliseconds('00')
+                                        buttonTimeStart = Math.round(buttonTimeStart)
 
-                                        if (buttonTime == timeBooked)
+                                        buttonTimeEnd.setHours('12')
+                                        buttonTimeEnd.setMinutes('00')
+                                        buttonTimeEnd.setSeconds('00')
+                                        buttonTimeEnd.setMilliseconds('00')
+                                        buttonTimeEnd = Math.round(buttonTimeEnd)
+
+
+                                        if (buttonTimeStart == timeBooked)
                                             button.style.backgroundColor = "red"
                                         else
                                             button.style.backgroundColor = "green"
 
+                                        checkBox.setAttribute("value", data[i].Zid + "-" + buttonTimeStart + "-" + buttonTimeEnd)
                                         span.appendChild(button)
                                     }
                                     else if (j == 2) {
                                         button.innerHTML = ("12-14")
                                         var buttonTime = new Date()
-                                        buttonTime.setHours('12')
-                                        buttonTime.setMinutes('00')
-                                        buttonTime.setSeconds('00')
-                                        buttonTime.setMilliseconds('00')
-                                        buttonTime = Math.round(buttonTime)
+                                        var buttonTimeStart = new Date()
+                                        var buttonTimeEnd = new Date()
+                                        buttonTimeStart.setHours('12')
+                                        buttonTimeStart.setMinutes('00')
+                                        buttonTimeStart.setSeconds('00')
+                                        buttonTimeStart.setMilliseconds('00')
+                                        buttonTimeStart = Math.round(buttonTimeStart)
 
-                                        if (buttonTime == timeBooked)
+                                        buttonTimeEnd.setHours('14')
+                                        buttonTimeEnd.setMinutes('00')
+                                        buttonTimeEnd.setSeconds('00')
+                                        buttonTimeEnd.setMilliseconds('00')
+                                        buttonTimeEnd = Math.round(buttonTimeEnd)
+
+
+                                        if (buttonTimeStart == timeBooked)
                                             button.style.backgroundColor = "red"
                                         else
                                             button.style.backgroundColor = "green"
 
+                                        checkBox.setAttribute("value", data[i].Zid + "-" + buttonTimeStart + "-" + buttonTimeEnd)
                                         span.appendChild(button)
                                     }
                                     else if (j == 3) {
                                         button.innerHTML = ("14-16")
-                                        var buttonTime = new Date()
-                                        buttonTime.setHours('14')
-                                        buttonTime.setMinutes('00')
-                                        buttonTime.setSeconds('00')
-                                        buttonTime.setMilliseconds('00')
-                                        buttonTime = Math.round(buttonTime)
-                                        console.log("Denna ska vara bokad:"+buttonTime)
+                                        var buttonTimeStart = new Date()
+                                        var buttonTimeEnd = new Date()
+                                        buttonTimeStart.setHours('14')
+                                        buttonTimeStart.setMinutes('00')
+                                        buttonTimeStart.setSeconds('00')
+                                        buttonTimeStart.setMilliseconds('00')
+                                        buttonTimeStart = Math.round(buttonTimeStart)
 
-                                        if (buttonTime == timeBooked)
+                                        buttonTimeEnd.setHours('16')
+                                        buttonTimeEnd.setMinutes('00')
+                                        buttonTimeEnd.setSeconds('00')
+                                        buttonTimeEnd.setMilliseconds('00')
+                                        buttonTimeEnd = Math.round(buttonTimeEnd)
+
+
+                                        if (buttonTimeStart == timeBooked)
                                             button.style.backgroundColor = "red"
                                         else
                                             button.style.backgroundColor = "green"
 
+                                        checkBox.setAttribute("value", data[i].Zid + "-" + buttonTimeStart + "-" + buttonTimeEnd)
                                         span.appendChild(button)
                                     }
                                     else{
                                         button.innerHTML = ("16-18")
-                                        var buttonTime = new Date()
-                                        buttonTime.setHours('16')
-                                        buttonTime.setMinutes('00')
-                                        buttonTime.setSeconds('00')
-                                        buttonTime.setMilliseconds('00')
-                                        buttonTime = Math.round(buttonTime)
+                                        var buttonTimeStart = new Date()
+                                        var buttonTimeEnd = new Date()
+                                        buttonTimeStart.setHours('16')
+                                        buttonTimeStart.setMinutes('00')
+                                        buttonTimeStart.setSeconds('00')
+                                        buttonTimeStart.setMilliseconds('00')
+                                        buttonTimeStart = Math.round(buttonTimeStart)
 
-                                        if (buttonTime == timeBooked)
+                                        buttonTimeEnd.setHours('18')
+                                        buttonTimeEnd.setMinutes('00')
+                                        buttonTimeEnd.setSeconds('00')
+                                        buttonTimeEnd.setMilliseconds('00')
+                                        buttonTimeEnd = Math.round(buttonTimeEnd)
+
+
+                                        if (buttonTimeStart == timeBooked)
                                             button.style.backgroundColor = "red"
                                         else
                                             button.style.backgroundColor = "green"
 
+                                        checkBox.setAttribute("value", data[i].Zid + "-" + buttonTimeStart + "-" + buttonTimeEnd)
                                         span.appendChild(button)
                                     }
 
-                                    var checkBox = document.createElement('input')
-                                    checkBox.setAttribute("class", "hidden")
-                                    checkBox.type = "checkbox"
-                                    
                                     span.appendChild(checkBox)
 
-                                    parentdiv.appendChild(span)
+                                    parentdivRoom1.appendChild(span)
                                    
                                 }
 
                             }
                             else {
 
-                                var parentdiv = document.getElementById('1330')
-                                parentdiv.appendChild(Desk)
+                               
+                                parentdivRoom2.appendChild(Desk)
 
                                 for (var j = 0; j < timeButtons; j++) {
                                     timeBooked = 0
@@ -324,7 +414,7 @@
 
                                     span.appendChild(checkBox)
 
-                                    parentdiv.appendChild(span)
+                                    parentdivRoom2.appendChild(span)
                                 }
                             }
 
@@ -342,32 +432,33 @@
 
 
 
-
-
-
         function book(Lastmodified, Zid) {
 
             return function () {
-                var startTime = new Date(document.getElementById('date').value)
-                var endTime = new Date(document.getElementById('date').value)
+                //var startTime = new Date(document.getElementById('date').value)
+                //var endTime = new Date(document.getElementById('date').value)
                 var LookFromTime = new Date(document.getElementById('date').value)
                 var LookTooTime = new Date(document.getElementById('date').value)
 
-                startTime.setHours(document.getElementById('startTime').value.split(':')[0])
-                startTime.setMinutes(document.getElementById('startTime').value.split(':')[1])
+                //startTime.setHours(document.getElementById('startTime').value.split(':')[0])
+                //startTime.setMinutes(document.getElementById('startTime').value.split(':')[1])
 
-                endTime.setHours(document.getElementById('endTime').value.split(':')[0])
-                endTime.setMinutes(document.getElementById('endTime').value.split(':')[1])
+                //endTime.setHours(document.getElementById('endTime').value.split(':')[0])
+                //endTime.setMinutes(document.getElementById('endTime').value.split(':')[1])
 
-                LookFromTime.setHours('08')
-                LookFromTime.setMinutes('00')
-                LookTooTime.setHours('23')
-                LookTooTime.setMinutes('59')
+                //LookFromTime.setHours('08')
+                //LookFromTime.setMinutes('00')
+                //LookFromTime.setSeconds('00')
+                //LookFromTime.setMilliseconds('00')
+                //LookTooTime.setHours('18')
+                //LookTooTime.setMinutes('00')
+                //LookFromTime.setSeconds('00')
+                //LookFromTime.setMilliseconds('00')
 
-                startTime = Math.round(startTime / 1000.0)
-                endTime = Math.round(endTime / 1000.0)
-                LookFromTime = Math.round(LookFromTime / 1000.0)
-                LookTooTime = Math.round(LookTooTime / 1000.0)
+                //startTime = Math.round(startTime / 1000.0)
+                //endTime = Math.round(endTime / 1000.0)
+                //LookFromTime = Math.round(LookFromTime / 1000.0)
+                //LookTooTime = Math.round(LookTooTime / 1000.0)
 
 
                 $.ajax({
