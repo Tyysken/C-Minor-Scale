@@ -29,11 +29,11 @@ $(document).ready(function () {
 })
 
 function updateBookingsTable() {
-    var from = Math.floor((new Date()).getTime()) - 1000 * 60 * 60 * 2;
+    var from = Math.floor((new Date()).getTime()) - 1000 * 60 * 60 * 3;
     var until = from + 1000 * 60 * 60 * 24 * 31;
 
     $.ajax({
-        url: "https://stage-booking.intelligentdesk.com/booking?username=aa.gpost@gmail.com&from=" + from + "&until=" + until,
+        url: "https://stage-booking.intelligentdesk.com/booking?username="+localStorage.getItem("user")+"&from=" + from + "&until=" + until,
         type: "GET",
         headers: {
             'idesk-auth-method': 'up',
