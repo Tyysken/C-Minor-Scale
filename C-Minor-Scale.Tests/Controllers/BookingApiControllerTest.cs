@@ -11,66 +11,73 @@ using C_Minor_Scale.Controllers;
 using System.Threading.Tasks;
 using System.Net;
 using System.Web.Http.Controllers;
+using C_Minor_Scale.Models;
 
 namespace C_Minor_Scale.Tests.Controllers
 {
     [TestClass]
     public class BookingApiControllerTest
     {
+        private string username = "test@test.com";
+        private string password = "abc123";
+
         [TestMethod]
-        public async Task Post_CreateBooking_RecieveSuccess()
+        public void getLoginInformation_WithValidRequest_ReceiveValidUser()
         {
-            // Arrange
-            BookingApiController controller = new BookingApiController();
-            RequestObjects.CreateBookingRequestObject requestObject = new RequestObjects.CreateBookingRequestObject
-            {
-                Owner = "test@test.com",
-                LastModified = (long)DateTimeOffset.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalMilliseconds,
-                From = (long)DateTimeOffset.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalMilliseconds,
-                Until = (long)(DateTimeOffset.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalMilliseconds + 60000),
-                Zid = 1234,
-                Subject = "Test booking",
-                Private = true
-            };
-            var request = new HttpRequestMessage();
-            request.Headers.Add("idesk-auth-method", "up");
-            request.Headers.Add("idesk-auth-username", "aa.gpost@gmail.com");
-            request.Headers.Add("idesk-auth-password", "c4a6fe62602ccec204e1afd053dc00d7d18dc92d0ceb2ed0f477f3cc6d310be3");
-            request.Headers.Add("Content-Type", "application/vnd.idesk-v5+json");
-            request.Headers.Add("Accept", "application/vnd.idesk-v5+json");
-            var controllerContext = new HttpControllerContext();
-            controllerContext.Request = request;
+            //Arrange
+            HttpRequestMessage Request = new HttpRequestMessage();
+            Request.Headers.Add("idesk-auth-username", username);
+            Request.Headers.Add("idesk-auth-password", password);
 
-            // Act
-            controller.ControllerContext = controllerContext;
-            HttpResponseMessage result = await controller.Post(requestObject);
+            //Act
+            User user = BookingApiController.getLoginInformation(Request);
 
-            // Assert
-            Assert.AreEqual(HttpStatusCode.OK, result.StatusCode);
+            //Assert
+            Assert.AreEqual(user.Username, username);
+            Assert.AreEqual(user.PasswordHash, password);
         }
 
         [TestMethod]
-        public async Task Post_CreateBooking_RecieveError()
+        public void getLoginInformation_WithMissingUsername_UserWithNullUsername()
         {
-            // Arrange
-            BookingApiController controller = new BookingApiController();
-            RequestObjects.CreateBookingRequestObject request = new RequestObjects.CreateBookingRequestObject
-            {
-                Owner = "test@test.com",
-                LastModified = (long)DateTimeOffset.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalMilliseconds,
-                From = (long)DateTimeOffset.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalMilliseconds,
-                Until = (long)(DateTimeOffset.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalMilliseconds + 60000),
-                Zid = -1,
-                Subject = "Test booking",
-                Private = true
-            };
-            // Invalid Zid and no headers
+            //Arrange
+            HttpRequestMessage Request = new HttpRequestMessage();
+            Request.Headers.Add("idesk-auth-password", password);
 
-            // Act
-            HttpResponseMessage result = await controller.Post(request);
+            //Act
+            User user = BookingApiController.getLoginInformation(Request);
 
-            // Assert
-            Assert.AreNotEqual(HttpStatusCode.OK, result.StatusCode);
+            //Assert
+            Assert.IsNull(user.Username);
+            Assert.AreEqual(user.PasswordHash, password);
+        }
+
+        [TestMethod]
+        public void geLoginInformation_WithMissingPassword_UserWithNullPassword()
+        {
+            //Arrange
+            HttpRequestMessage Request = new HttpRequestMessage();
+            Request.Headers.Add("idesk-auth-username", username);
+
+            //Act
+            User user = BookingApiController.getLoginInformation(Request);
+
+            //Assert
+            Assert.IsNull(user.PasswordHash);
+            Assert.AreEqual(user.Username, username);
+        }
+
+        [TestMethod]
+        public void getLoginInformation_WithNullRequest_NullUser()
+        {
+            //Arrange
+
+
+            //Act
+            User user = BookingApiController.getLoginInformation(null);
+
+            //Assert
+            Assert.IsNull(user);
         }
     }
 }

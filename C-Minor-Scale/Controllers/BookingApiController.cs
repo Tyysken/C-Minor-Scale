@@ -1,32 +1,17 @@
-﻿using System;
+﻿using C_Minor_Scale.Models;
+using C_Minor_Scale.RequestObjects;
+using C_Minor_Scale.Services;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Web.Http;
-using C_Minor_Scale.RequestObjects;
-using C_Minor_Scale.Services;
-using C_Minor_Scale.Models;
 using System.Threading.Tasks;
+using System.Web.Http;
 
 namespace C_Minor_Scale.Controllers
 {
     public class BookingApiController : ApiController
     {
-        // GET api/<controller>
-        [ActionName("DefaultAction")]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
-
-        // GET api/<controller>/5
-        [ActionName("DefaultAction")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
         // POST api/<controller>
         [ActionName("DefaultAction")]
         public async Task<HttpResponseMessage> Post([FromBody]CreateBookingRequestObject request)
@@ -47,22 +32,7 @@ namespace C_Minor_Scale.Controllers
                 Private = request.Private
             };
 
-            IEnumerable<string> username, password;
-            if (!Request.Headers.TryGetValues("idesk-auth-username", out username))
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "E_AUTH_CREDENTIALS_MISSING");
-            }
-
-            if (!Request.Headers.TryGetValues("idesk-auth-password", out password))
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "E_NO_PASSWORD");
-            }
-
-            User user = new Models.User
-            {
-                Username = username.First(),
-                PasswordHash = password.First()
-            };
+            User user = getLoginInformation(Request);
 
             return await BookingServices.PostBooking(user, booking);
         }
@@ -71,22 +41,7 @@ namespace C_Minor_Scale.Controllers
         [HttpPost]
         public async Task<HttpResponseMessage> Multi([FromBody]CreateBookingMultiRequestObject request)
         {
-            IEnumerable<string> username, password;
-            if (!Request.Headers.TryGetValues("idesk-auth-username", out username))
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "E_AUTH_CREDENTIALS_MISSING");
-            }
-
-            if (!Request.Headers.TryGetValues("idesk-auth-password", out password))
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "E_NO_PASSWORD");
-            }
-
-            User user = new User
-            {
-                Username = username.First(),
-                PasswordHash = password.First()
-            };
+            User user = getLoginInformation(Request);
 
             if (await UserServices.GetUserRole(user) != UserServices.Role.Teacher)
             {
@@ -125,16 +80,31 @@ namespace C_Minor_Scale.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "E_MULTI_BOOKING_PARTIALLY_FAILED");
         }
 
-        // PUT api/<controller>/5
-        [ActionName("DefaultAction")]
-        public void Put(int id, [FromBody]string value)
+        public static User getLoginInformation(HttpRequestMessage Request)
         {
-        }
+            if(Request == null)
+            {
+                return null;
+            }
 
-        // DELETE api/<controller>/5
-        [ActionName("DefaultAction")]
-        public void Delete(int id)
-        {
+            User user = new User
+            {
+                Username = null,
+                PasswordHash = null
+            };
+
+            IEnumerable<string> username, password;
+            if (Request.Headers.TryGetValues("idesk-auth-username", out username))
+            {
+                user.Username = username.First();
+            }
+
+            if (Request.Headers.TryGetValues("idesk-auth-password", out password))
+            {
+                user.PasswordHash = password.First();
+            }
+
+            return user;
         }
     }
 }
