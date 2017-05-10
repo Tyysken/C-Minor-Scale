@@ -95,7 +95,7 @@
                 if ($(this).is(":checked")) {
                     listOfZid.push(parseInt(this.value.split('-')[0]))
                     BookingStartTime = (parseFloat(this.value.split('-')[1]))
-                    BookingEndTime = (parseFloat(this.value.split('-')[2]))
+                    BookingEndTime = (parseFloat(this.value.split('-')[2])) - 1
                     lastModified = (parseFloat(this.value.split('-')[3]))
                     
 
@@ -501,8 +501,8 @@
                 "Zids": listOfZid,
                 "Subject": "bookingtest",
                 "Private": "false"
-
             }))
+
                 $.ajax({
                     url: "http://localhost:60156/api/bookingapi/multi/",
                     type: "POST",
