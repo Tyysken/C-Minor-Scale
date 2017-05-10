@@ -72,22 +72,15 @@ function checkAllTimeButtons() {
 
 function StatusOfDesks(LookFromTime, LookTooTime) {
     $.ajax({
-
         url: "https://stage-booking.intelligentdesk.com/booking?from=" + LookFromTime + "&until=" + LookTooTime + "&parent=5115225993379840",
         type: "GET",
-        headers: {
-            'idesk-auth-method': 'up',
-            'idesk-auth-username': localStorage.getItem("user"),
-            'idesk-auth-password': localStorage.getItem('password'),
-            'Accept': 'application/vnd.idesk-v5+json'
-        },
+        headers: getHeaders(),
         contentType: 'application/vnd.idesk-v5+json',
         success: function (data) {
             alert('Yaaay!');
             console.log(data)
             listOfBookings = data
             desks()
-
         },
 
         error: function (data) {
@@ -100,12 +93,7 @@ function desks() {
     $.ajax({
         url: "https://stage-core.intelligentdesk.com/zone?realm=true",
         type: "GET",
-        headers: {
-            'idesk-auth-method': 'up',
-            'idesk-auth-username': localStorage.getItem("user"),
-            'idesk-auth-password': localStorage.getItem('password'),
-            'Accept': 'application/vnd.idesk-v5+json'
-        },
+        headers: getHeaders(),
         contentType: 'application/vnd.idesk-v5+json',
         success: function (data) {
             alert('Success!');
@@ -444,12 +432,7 @@ function bookings() {
     $.ajax({
         url: "http://localhost:60156/api/bookingapi/multi/",
         type: "POST",
-        headers: {
-            'idesk-auth-method': 'up',
-            'idesk-auth-username': localStorage.getItem('user'),
-            'idesk-auth-password': localStorage.getItem('password'),
-            'Accept': 'application/vnd.idesk-v5+json'
-        },
+        headers: getHeaders(),
         data: JSON.stringify({
             "Owner": localStorage.getItem("user"),
             "Lastmodified": lastModified,
@@ -477,12 +460,7 @@ function book() {
     $.ajax({
         url: "http://localhost:60156/api/bookingapi",
         type: "POST",
-        headers: {
-            'idesk-auth-method': 'up',
-            'idesk-auth-username': localStorage.getItem('user'),
-            'idesk-auth-password': localStorage.getItem('password'),
-            'Accept': 'application/vnd.idesk-v5+json'
-        },
+        headers: getHeaders,
         data: JSON.stringify({
             "Owner": localStorage.getItem("user"),
             "Lastmodified": lastModified,
