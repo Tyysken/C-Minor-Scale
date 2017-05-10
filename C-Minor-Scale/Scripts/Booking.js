@@ -143,22 +143,8 @@ function desks() {
                             if (j == 0) {
                                 button.innerHTML = "08-10"
 
-                                var buttonTimeStart = new Date(document.getElementById('date').value)
-                                var buttonTimeEnd = new Date(document.getElementById('date').value)
-
-                                buttonTimeStart.setHours('08')
-                                buttonTimeStart.setMinutes('00')
-                                buttonTimeStart.setSeconds('00')
-                                buttonTimeStart.setMilliseconds('00')
-                                buttonTimeStart = Math.round(buttonTimeStart)
-
-
-
-                                buttonTimeEnd.setHours('10')
-                                buttonTimeEnd.setMinutes('00')
-                                buttonTimeEnd.setSeconds('00')
-                                buttonTimeEnd.setMilliseconds('00')
-                                buttonTimeEnd = Math.round(buttonTimeEnd)
+                                var buttonTimeStart = getButtonTime(8);
+                                var buttonTimeEnd = getButtonTime(10);
 
                                 button.style.backgroundColor = getColorForButton(buttonTimeStart)
 
@@ -167,20 +153,8 @@ function desks() {
                             }
                             else if (j == 1) {
                                 button.innerHTML = ("10-12")
-                                var buttonTimeStart = new Date(document.getElementById('date').value)
-                                var buttonTimeEnd = new Date(document.getElementById('date').value)
-                                buttonTimeStart.setHours('10')
-                                buttonTimeStart.setMinutes('00')
-                                buttonTimeStart.setSeconds('00')
-                                buttonTimeStart.setMilliseconds('00')
-                                buttonTimeStart = Math.round(buttonTimeStart)
-
-                                buttonTimeEnd.setHours('12')
-                                buttonTimeEnd.setMinutes('00')
-                                buttonTimeEnd.setSeconds('00')
-                                buttonTimeEnd.setMilliseconds('00')
-                                buttonTimeEnd = Math.round(buttonTimeEnd)
-
+                                var buttonTimeStart = getButtonTime(10)
+                                var buttonTimeEnd = getButtonTime(12)
 
                                 button.style.backgroundColor = getColorForButton(buttonTimeStart)
 
@@ -189,20 +163,8 @@ function desks() {
                             }
                             else if (j == 2) {
                                 button.innerHTML = ("12-14")
-                                var buttonTimeStart = new Date(document.getElementById('date').value)
-                                var buttonTimeEnd = new Date(document.getElementById('date').value)
-                                buttonTimeStart.setHours('12')
-                                buttonTimeStart.setMinutes('00')
-                                buttonTimeStart.setSeconds('00')
-                                buttonTimeStart.setMilliseconds('00')
-                                buttonTimeStart = Math.round(buttonTimeStart)
-
-                                buttonTimeEnd.setHours('14')
-                                buttonTimeEnd.setMinutes('00')
-                                buttonTimeEnd.setSeconds('00')
-                                buttonTimeEnd.setMilliseconds('00')
-                                buttonTimeEnd = Math.round(buttonTimeEnd)
-
+                                var buttonTimeStart = getButtonTime(12)
+                                var buttonTimeEnd = getButtonTime(14)
 
                                 button.style.backgroundColor = getColorForButton(buttonTimeStart)
 
@@ -460,7 +422,7 @@ function book() {
     $.ajax({
         url: "http://localhost:60156/api/bookingapi",
         type: "POST",
-        headers: getHeaders,
+        headers: getHeaders(),
         data: JSON.stringify({
             "Owner": localStorage.getItem("user"),
             "Lastmodified": lastModified,
@@ -564,4 +526,8 @@ function getColorForButton(startTime) {
     else {
         return "green"
     }
+}
+
+function getButtonTime(hour) {
+    return moment($('#date').value).set({'hour':hour, 'minute':0, 'second':0, 'millisecond': 0}).valueOf();
 }
