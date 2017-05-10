@@ -43,12 +43,14 @@
         var BookingStartTime = 0
         var BookingEndTime = 0
 
-        var datePicked = 0
+        var teacher = 6570433172733952
+        var LookFromTime = 0
+        var LookTooTime = 0
 
         $(document).ready(function () {
             document.getElementById("date").valueAsDate = new Date()
-            var LookFromTime = new Date(document.getElementById('date').value)
-            var LookTooTime = new Date(document.getElementById('date').value)
+            LookFromTime = new Date(document.getElementById('date').value)
+            LookTooTime = new Date(document.getElementById('date').value)
             LookFromTime.setHours('08')
             LookFromTime.setMinutes('00')
             LookFromTime.setSeconds('00')
@@ -83,8 +85,10 @@
 
             $("#bookingButton").click(function () {
                 checkAllTimeButtons()
-
-               bookings()
+                if (localStorage.getItem('role') == teacher)
+                    bookings()
+                else
+                    book()
             });
            
         })
@@ -97,7 +101,7 @@
                     BookingStartTime = (parseFloat(this.value.split('-')[1]))
                     BookingEndTime = (parseFloat(this.value.split('-')[2])) - 1
                     lastModified = (parseFloat(this.value.split('-')[3]))
-                    
+
 
                 }
             });
@@ -165,7 +169,7 @@
 
 
                                 for (var j = 0; j < timeButtons; j++) {
-                                    var timeBooked = 0
+                                    var timeBooked = []
                                     var span = document.createElement('span')
                                     span.setAttribute("class", "button-checkbox")
                                     
@@ -178,8 +182,8 @@
                                     button.setAttribute("class", "btn btn-primary btn-lg")
                                     for (var k = 0; k < listOfBookings.length; k++) {
                                         if (data[i].Zid == listOfBookings[k].Zid) {
-                                            timeBooked = listOfBookings[k].From
-                                            break
+                                            timeBooked.push(listOfBookings[k].From) 
+                                            
                                         }
                                     }
                                     button.type = "button"
@@ -204,7 +208,8 @@
                                         buttonTimeEnd.setMilliseconds('00')
                                         buttonTimeEnd = Math.round(buttonTimeEnd)
 
-                                        if (buttonTimeStart == timeBooked)
+                                           
+                                        if (timeBooked.indexOf(buttonTimeStart) >= 0)
                                             button.style.backgroundColor = "red"
                                         else
                                             button.style.backgroundColor = "green"
@@ -229,7 +234,7 @@
                                         buttonTimeEnd = Math.round(buttonTimeEnd)
 
 
-                                        if (buttonTimeStart == timeBooked)
+                                        if (timeBooked.indexOf(buttonTimeStart) >= 0)
                                             button.style.backgroundColor = "red"
                                         else
                                             button.style.backgroundColor = "green"
@@ -254,7 +259,7 @@
                                         buttonTimeEnd = Math.round(buttonTimeEnd)
 
 
-                                        if (buttonTimeStart == timeBooked)
+                                        if (timeBooked.indexOf(buttonTimeStart) >= 0)
                                             button.style.backgroundColor = "red"
                                         else
                                             button.style.backgroundColor = "green"
@@ -279,7 +284,7 @@
                                         buttonTimeEnd = Math.round(buttonTimeEnd)
 
 
-                                        if (buttonTimeStart == timeBooked)
+                                        if (timeBooked.indexOf(buttonTimeStart) >= 0)
                                             button.style.backgroundColor = "red"
                                         else
                                             button.style.backgroundColor = "green"
@@ -304,7 +309,7 @@
                                         buttonTimeEnd = Math.round(buttonTimeEnd)
 
 
-                                        if (buttonTimeStart == timeBooked)
+                                        if (timeBooked.indexOf(buttonTimeStart) >= 0)
                                             button.style.backgroundColor = "red"
                                         else
                                             button.style.backgroundColor = "green"
@@ -326,9 +331,10 @@
                                 parentdivRoom2.appendChild(Desk)
 
                                 for (var j = 0; j < timeButtons; j++) {
-                                    timeBooked = 0
+                                    var timeBooked = []
                                     var span = document.createElement('span')
                                     span.setAttribute("class", "button-checkbox")
+
 
                                     var checkBox = document.createElement('input')
                                     checkBox.setAttribute("class", "hidden")
@@ -339,8 +345,7 @@
                                     for (var k = 0; k < listOfBookings.length; k++)
                                     {
                                         if (data[i].Zid == listOfBookings[k].Zid) {
-                                            timeBooked = listOfBookings[k].From
-                                            break
+                                            timeBooked.push(listOfBookings[k].From)
                                         }
                                     }
                                     button.type = "button"
@@ -358,13 +363,14 @@
                                         buttonTimeStart = Math.round(buttonTimeStart)
 
 
+
                                         buttonTimeEnd.setHours('10')
                                         buttonTimeEnd.setMinutes('00')
                                         buttonTimeEnd.setSeconds('00')
                                         buttonTimeEnd.setMilliseconds('00')
                                         buttonTimeEnd = Math.round(buttonTimeEnd)
 
-                                        if (buttonTimeStart == timeBooked)
+                                        if (timeBooked.indexOf(buttonTimeStart) >= 0)
                                             button.style.backgroundColor = "red"
                                         else
                                             button.style.backgroundColor = "green"
@@ -389,7 +395,7 @@
                                         buttonTimeEnd = Math.round(buttonTimeEnd)
 
 
-                                        if (buttonTimeStart == timeBooked)
+                                        if (timeBooked.indexOf(buttonTimeStart) >= 0)
                                             button.style.backgroundColor = "red"
                                         else
                                             button.style.backgroundColor = "green"
@@ -414,7 +420,7 @@
                                         buttonTimeEnd = Math.round(buttonTimeEnd)
 
 
-                                        if (buttonTimeStart == timeBooked)
+                                        if (timeBooked.indexOf(buttonTimeStart) >= 0)
                                             button.style.backgroundColor = "red"
                                         else
                                             button.style.backgroundColor = "green"
@@ -439,7 +445,7 @@
                                         buttonTimeEnd = Math.round(buttonTimeEnd)
 
 
-                                        if (buttonTimeStart == timeBooked)
+                                        if (timeBooked.indexOf(buttonTimeStart) >= 0)
                                             button.style.backgroundColor = "red"
                                         else
                                             button.style.backgroundColor = "green"
@@ -464,7 +470,7 @@
                                         buttonTimeEnd = Math.round(buttonTimeEnd)
 
 
-                                        if (buttonTimeStart == timeBooked)
+                                        if (timeBooked.indexOf(buttonTimeStart) >= 0)
                                             button.style.backgroundColor = "red"
                                         else
                                             button.style.backgroundColor = "green"
@@ -524,7 +530,8 @@
                     }),
                     contentType: 'application/json',
                     success: function (data) {
-                        alert('Success!');
+                        alert('Success! As teacher');
+                        StatusOfDesks(LookFromTime, LookTooTime)
                     },
 
                     error: function (data) {
@@ -534,37 +541,39 @@
                 });
             }
 
-        //function book() {
-        //    $.ajax({
-        //        url: "http://localhost:60156/api/bookingapi",
-        //        type: "POST",
-        //        headers: {
-        //            'idesk-auth-method': 'up',
-        //            'idesk-auth-username': localStorage.getItem('user'),
-        //            'idesk-auth-password': localStorage.getItem('password'),
-        //            'Accept': 'application/vnd.idesk-v5+json'
-        //        },
-        //        data: JSON.stringify({
-        //            "Owner": localStorage.getItem("user"),
-        //            "Lastmodified": test,
-        //            "From": BookingStartTime,
-        //            "Until": BookingEndTime,
-        //            "Zid": listOfZid,
-        //            "Subject": "bookingtest",
-        //            "Private": "false"
+        function book() {
+            $.ajax({
+                url: "http://localhost:60156/api/bookingapi",
+                type: "POST",
+                headers: {
+                    'idesk-auth-method': 'up',
+                    'idesk-auth-username': localStorage.getItem('user'),
+                    'idesk-auth-password': localStorage.getItem('password'),
+                    'Accept': 'application/vnd.idesk-v5+json'
+                },
+                data: JSON.stringify({
+                    "Owner": localStorage.getItem("user"),
+                    "Lastmodified": lastModified,
+                    "From": BookingStartTime,
+                    "Until": BookingEndTime,
+                    "Zid": listOfZid[0],
+                    "Subject": "bookingtest",
+                    "Private": "false"
 
-        //        }),
-        //        contentType: 'application/json',
-        //        success: function (data) {
-        //            alert('Success!');
-        //        },
+                }),
+                contentType: 'application/json',
+                success: function (data) {
+                    alert('Success! As student');
+                    StatusOfDesks(LookFromTime, LookTooTime)
 
-        //        error: function (data) {
-        //            alert("Error");
-        //            console.log(data.responseText);
-        //        }
-        //    });
-        //}
+                },
+
+                error: function (data) {
+                    alert("Error");
+                    console.log(data.responseText);
+                }
+            });
+        }
 
 
         function checkboxsButton() {

@@ -17,6 +17,7 @@
                 alert('Success!');
                 localStorage.setItem('user', data.Username)
                 localStorage.setItem('password', SHA256(email + pass))
+                localStorage.setItem('role', data.Parent)
                 window.location.href = '/Home/Index/'
             },
 
