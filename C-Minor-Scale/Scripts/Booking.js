@@ -1,5 +1,7 @@
 ﻿var listOfBookings = [];
 var listOfZid = [];
+var timeBooked = [];
+var ownerOfTimeBooked = [];
 var lastModified = 0;
 var BookingStartTime = 0
 var BookingEndTime = 0
@@ -68,7 +70,6 @@ function checkAllTimeButtons() {
     });
 }
 
-
 function StatusOfDesks(LookFromTime, LookTooTime) {
     $.ajax({
 
@@ -130,7 +131,8 @@ function desks() {
 
 
                         for (var j = 0; j < timeButtons; j++) {
-                            var timeBooked = []
+                            timeBooked.length = 0
+                            ownerOfTimeBooked.length = 0
                             var span = document.createElement('span')
                             span.setAttribute("class", "button-checkbox")
 
@@ -144,9 +146,10 @@ function desks() {
                             for (var k = 0; k < listOfBookings.length; k++) {
                                 if (data[i].Zid == listOfBookings[k].Zid) {
                                     timeBooked.push(listOfBookings[k].From)
-
+                                    ownerOfTimeBooked.push(listOfBookings[k].Owner)
                                 }
                             }
+
                             button.type = "button"
 
                             if (j == 0) {
@@ -169,16 +172,7 @@ function desks() {
                                 buttonTimeEnd.setMilliseconds('00')
                                 buttonTimeEnd = Math.round(buttonTimeEnd)
 
-                                var indexOfBooking = timeBooked.indexOf(buttonTimeStart);
-                                if (indexOfBooking >= 0) {
-                                    if (timeBooked[indexOfBooking].Owner.toLowerCase() === localStorage.user.toLowerCase()) {
-                                        button.style.backgroundColor = "blue"
-                                    }
-                                    else
-                                        button.style.backgroundColor = "red"
-                                }
-                                else
-                                    button.style.backgroundColor = "green"
+                                button.style.backgroundColor = getColorForButton(buttonTimeStart)
 
                                 checkBox.setAttribute("value", data[i].Zid + "-" + buttonTimeStart + "-" + buttonTimeEnd + "-" + data[i].LastModified)
                                 span.appendChild(button)
@@ -200,10 +194,7 @@ function desks() {
                                 buttonTimeEnd = Math.round(buttonTimeEnd)
 
 
-                                if (timeBooked.indexOf(buttonTimeStart) >= 0)
-                                    button.style.backgroundColor = "red"
-                                else
-                                    button.style.backgroundColor = "green"
+                                button.style.backgroundColor = getColorForButton(buttonTimeStart)
 
                                 checkBox.setAttribute("value", data[i].Zid + "-" + buttonTimeStart + "-" + buttonTimeEnd + "-" + data[i].LastModified)
                                 span.appendChild(button)
@@ -225,10 +216,7 @@ function desks() {
                                 buttonTimeEnd = Math.round(buttonTimeEnd)
 
 
-                                if (timeBooked.indexOf(buttonTimeStart) >= 0)
-                                    button.style.backgroundColor = "red"
-                                else
-                                    button.style.backgroundColor = "green"
+                                button.style.backgroundColor = getColorForButton(buttonTimeStart)
 
                                 checkBox.setAttribute("value", data[i].Zid + "-" + buttonTimeStart + "-" + buttonTimeEnd + "-" + data[i].LastModified)
                                 span.appendChild(button)
@@ -250,10 +238,7 @@ function desks() {
                                 buttonTimeEnd = Math.round(buttonTimeEnd)
 
 
-                                if (timeBooked.indexOf(buttonTimeStart) >= 0)
-                                    button.style.backgroundColor = "red"
-                                else
-                                    button.style.backgroundColor = "green"
+                                button.style.backgroundColor = getColorForButton(buttonTimeStart)
 
                                 checkBox.setAttribute("value", data[i].Zid + "-" + buttonTimeStart + "-" + buttonTimeEnd + "-" + data[i].LastModified)
                                 span.appendChild(button)
@@ -275,10 +260,7 @@ function desks() {
                                 buttonTimeEnd = Math.round(buttonTimeEnd)
 
 
-                                if (timeBooked.indexOf(buttonTimeStart) >= 0)
-                                    button.style.backgroundColor = "red"
-                                else
-                                    button.style.backgroundColor = "green"
+                                button.style.backgroundColor = getColorForButton(buttonTimeStart)
 
                                 checkBox.setAttribute("value", data[i].Zid + "-" + buttonTimeStart + "-" + buttonTimeEnd + "-" + data[i].LastModified)
                                 span.appendChild(button)
@@ -297,7 +279,8 @@ function desks() {
                         parentdivRoom2.appendChild(Desk)
 
                         for (var j = 0; j < timeButtons; j++) {
-                            var timeBooked = []
+                            timeBooked.length = 0
+                            ownerOfTimeBooked.length = 0
                             var span = document.createElement('span')
                             span.setAttribute("class", "button-checkbox")
 
@@ -311,6 +294,7 @@ function desks() {
                             for (var k = 0; k < listOfBookings.length; k++) {
                                 if (data[i].Zid == listOfBookings[k].Zid) {
                                     timeBooked.push(listOfBookings[k].From)
+                                    ownerOfTimeBooked.push(listOfBookings[k].Owner)
                                 }
                             }
                             button.type = "button"
@@ -335,10 +319,7 @@ function desks() {
                                 buttonTimeEnd.setMilliseconds('00')
                                 buttonTimeEnd = Math.round(buttonTimeEnd)
 
-                                if (timeBooked.indexOf(buttonTimeStart) >= 0)
-                                    button.style.backgroundColor = "red"
-                                else
-                                    button.style.backgroundColor = "green"
+                                button.style.backgroundColor = getColorForButton(buttonTimeStart)
 
                                 checkBox.setAttribute("value", data[i].Zid + "-" + buttonTimeStart + "-" + buttonTimeEnd + "-" + data[i].LastModified)
                                 span.appendChild(button)
@@ -360,10 +341,7 @@ function desks() {
                                 buttonTimeEnd = Math.round(buttonTimeEnd)
 
 
-                                if (timeBooked.indexOf(buttonTimeStart) >= 0)
-                                    button.style.backgroundColor = "red"
-                                else
-                                    button.style.backgroundColor = "green"
+                                button.style.backgroundColor = getColorForButton(buttonTimeStart)
 
                                 checkBox.setAttribute("value", data[i].Zid + "-" + buttonTimeStart + "-" + buttonTimeEnd + "-" + data[i].LastModified)
                                 span.appendChild(button)
@@ -385,10 +363,7 @@ function desks() {
                                 buttonTimeEnd = Math.round(buttonTimeEnd)
 
 
-                                if (timeBooked.indexOf(buttonTimeStart) >= 0)
-                                    button.style.backgroundColor = "red"
-                                else
-                                    button.style.backgroundColor = "green"
+                                button.style.backgroundColor = getColorForButton(buttonTimeStart)
 
                                 checkBox.setAttribute("value", data[i].Zid + "-" + buttonTimeStart + "-" + buttonTimeEnd + "-" + data[i].LastModified)
                                 span.appendChild(button)
@@ -410,10 +385,7 @@ function desks() {
                                 buttonTimeEnd = Math.round(buttonTimeEnd)
 
 
-                                if (timeBooked.indexOf(buttonTimeStart) >= 0)
-                                    button.style.backgroundColor = "red"
-                                else
-                                    button.style.backgroundColor = "green"
+                                button.style.backgroundColor = getColorForButton(buttonTimeStart)
 
                                 checkBox.setAttribute("value", data[i].Zid + "-" + buttonTimeStart + "-" + buttonTimeEnd + "-" + data[i].LastModified)
                                 span.appendChild(button)
@@ -435,10 +407,7 @@ function desks() {
                                 buttonTimeEnd = Math.round(buttonTimeEnd)
 
 
-                                if (timeBooked.indexOf(buttonTimeStart) >= 0)
-                                    button.style.backgroundColor = "red"
-                                else
-                                    button.style.backgroundColor = "green"
+                                button.style.backgroundColor = getColorForButton(buttonTimeStart)
 
                                 checkBox.setAttribute("value", data[i].Zid + "-" + buttonTimeStart + "-" + buttonTimeEnd + "-" + data[i].LastModified)
                                 span.appendChild(button)
@@ -460,8 +429,6 @@ function desks() {
     });
 
 }
-
-
 
 function bookings() {
     console.log(JSON.stringify({
@@ -540,7 +507,6 @@ function book() {
     });
 }
 
-
 function checkboxsButton() {
     $('.button-checkbox').each(function () {
 
@@ -606,3 +572,18 @@ function checkboxsButton() {
         init();
     });
 };
+
+function getColorForButton(startTime) {
+    var indexOfBooking = timeBooked.indexOf(startTime);
+    if (indexOfBooking >= 0) {
+        if (ownerOfTimeBooked[indexOfBooking].toLowerCase() === localStorage.user.toLowerCase()) {
+            return "blue"
+        }
+        else {
+            return "red"
+        }
+    }
+    else {
+        return "green"
+    }
+}
