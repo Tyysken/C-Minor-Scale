@@ -1,5 +1,6 @@
 ﻿var listOfBookings = [];
 var listOfZid = [];
+var listOfDesks = [];
 var lastModified = 0;
 var BookingStartTime = 0
 var BookingEndTime = 0
@@ -116,15 +117,32 @@ function desks() {
             $(parentdivRoom2).empty()
 
             for (var i = 0; i < data.length; i++) {
-                var timeButtons = 5
                 if (data[i].Type == 'DESK') {
 
                     var Desk = document.createElement("h3")
-                    var DeskTitle = document.createTextNode(data[i].Name)
+                    var DeskTitle = document.createTextNode(data[i].Name.split(" ")[1])
+                    Desk.appendChild(DeskTitle)
+
+                    listOfDesks.push(Desk.innerHTML)
+                    
+                }
+            }
+            listOfDesks.sort(function (a, b) { return a - b })
+            for (var i = 0; i < listOfDesks.length; i++) {
+                listOfDesks[i] = "Plats "+ listOfDesks[i]
+            }
+            
+            console.log(listOfDesks)
+
+            for (var i = 0; i < listOfDesks.length; i++) {
+                var timeButtons = 5
+
+                    var Desk = document.createElement("h3")
+                    var DeskTitle = document.createTextNode(listOfDesks[i])
                     Desk.appendChild(DeskTitle)
 
 
-                    if (data[i].Name.split(" ")[1] < 5) {
+                    if (listOfDesks[i].split(" ")[1] < 5) {
 
                         parentdivRoom1.appendChild(Desk)
 
@@ -171,10 +189,6 @@ function desks() {
 
                                 var indexOfBooking = timeBooked.indexOf(buttonTimeStart);
                                 if (indexOfBooking >= 0) {
-                                    if (timeBooked[indexOfBooking].Owner.toLowerCase() === localStorage.user.toLowerCase()) {
-                                        button.style.backgroundColor = "blue"
-                                    }
-                                    else
                                         button.style.backgroundColor = "red"
                                 }
                                 else
@@ -450,7 +464,6 @@ function desks() {
                     }
 
                 }
-            }
             checkboxsButton()
         },
 
