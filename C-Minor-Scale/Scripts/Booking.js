@@ -13,22 +13,11 @@ var LookTooTime = 0
 
 $(document).ready(function () {
     document.getElementById("date").valueAsDate = new Date()
-    LookFromTime = new Date(document.getElementById('date').value)
-    LookTooTime = new Date(document.getElementById('date').value)
-    LookFromTime.setHours('08')
-    LookFromTime.setMinutes('00')
-    LookFromTime.setSeconds('00')
-    LookFromTime.setMilliseconds('00')
-    LookTooTime.setHours('18')
-    LookTooTime.setMinutes('00')
-    LookTooTime.setSeconds('00')
-    LookTooTime.setMilliseconds('00')
-    LookFromTime = Math.round(LookFromTime)
-    LookTooTime = Math.round(LookTooTime)
+    LookFromTime = getButtonTime(8)
+    LookTooTime = getButtonTime(18)
     console.log(LookFromTime, LookTooTime)
 
     StatusOfDesks(LookFromTime, LookTooTime)
-
 
     $("#dateButton").click(function () {
         var newTimeFrom = new Date(document.getElementById('date').value)
@@ -78,7 +67,6 @@ function StatusOfDesks(LookFromTime, LookTooTime) {
         headers: getHeaders(),
         contentType: 'application/vnd.idesk-v5+json',
         success: function (data) {
-            alert('Yaaay!');
             console.log(data)
             listOfBookings = data
             desks()
@@ -97,8 +85,6 @@ function desks() {
         headers: getHeaders(),
         contentType: 'application/vnd.idesk-v5+json',
         success: function (data) {
-            alert('Success!');
-
             var parentdivRoom1 = document.getElementById('2440')
             $(parentdivRoom1).empty()
 

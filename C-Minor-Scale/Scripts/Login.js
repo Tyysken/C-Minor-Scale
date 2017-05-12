@@ -14,7 +14,6 @@
             },
             contentType: 'application/vnd.idesk-v5+json',
             success: function (data) {
-                alert('Success!');
                 localStorage.setItem('user', data.Username)
                 localStorage.setItem('password', SHA256(email + pass))
                 localStorage.setItem('role', data.Parent)
