@@ -135,6 +135,7 @@ function desks() {
 
                             var button = document.createElement('button')
                             button.setAttribute("class", "btn btn-primary btn-lg")
+                            button.setAttribute("style", "margin-left: 2px")
                             for (var k = 0; k < listOfBookings.length; k++) {
                                 if (data[i].Zid == listOfBookings[k].Zid) {
                                     timeBooked.push(listOfBookings[k].From)
@@ -152,6 +153,7 @@ function desks() {
 
 
                                 button.style.backgroundColor = getColorForButton(buttonTimeStart)
+                                button.style.borderColor = getColorForButton(buttonTimeStart)
 
 
                                 checkBox.setAttribute("value", data[i].Zid + "-" + buttonTimeStart + "-" + buttonTimeEnd + "-" + data[i].LastModified)
@@ -163,6 +165,7 @@ function desks() {
                                 var buttonTimeEnd = getButtonTime(12)
 
                                 button.style.backgroundColor = getColorForButton(buttonTimeStart)
+                                button.style.borderColor = getColorForButton(buttonTimeStart)
 
                                 checkBox.setAttribute("value", data[i].Zid + "-" + buttonTimeStart + "-" + buttonTimeEnd + "-" + data[i].LastModified)
                                 span.appendChild(button)
@@ -173,6 +176,7 @@ function desks() {
                                 var buttonTimeEnd = getButtonTime(14)
 
                                 button.style.backgroundColor = getColorForButton(buttonTimeStart)
+                                button.style.borderColor = getColorForButton(buttonTimeStart)
 
                                 checkBox.setAttribute("value", data[i].Zid + "-" + buttonTimeStart + "-" + buttonTimeEnd + "-" + data[i].LastModified)
                                 span.appendChild(button)
@@ -183,6 +187,7 @@ function desks() {
                                 var buttonTimeEnd = getButtonTime(16)
 
                                 button.style.backgroundColor = getColorForButton(buttonTimeStart)
+                                button.style.borderColor = getColorForButton(buttonTimeStart)
 
                                 checkBox.setAttribute("value", data[i].Zid + "-" + buttonTimeStart + "-" + buttonTimeEnd + "-" + data[i].LastModified)
                                 span.appendChild(button)
@@ -193,6 +198,7 @@ function desks() {
                                 var buttonTimeEnd = getButtonTime(18)
 
                                 button.style.backgroundColor = getColorForButton(buttonTimeStart)
+                                button.style.borderColor = getColorForButton(buttonTimeStart)
 
                                 checkBox.setAttribute("value", data[i].Zid + "-" + buttonTimeStart + "-" + buttonTimeEnd + "-" + data[i].LastModified)
                                 span.appendChild(button)
@@ -223,6 +229,7 @@ function desks() {
 
                             var button = document.createElement('button')
                             button.setAttribute("class", "btn btn-primary btn-lg")
+                            button.setAttribute("style", "margin-left: 2px")
                             for (var k = 0; k < listOfBookings.length; k++) {
                                 if (data[i].Zid == listOfBookings[k].Zid) {
                                     timeBooked.push(listOfBookings[k].From)
@@ -238,6 +245,7 @@ function desks() {
                                 var buttonTimeEnd = getButtonTime(10)
 
                                 button.style.backgroundColor = getColorForButton(buttonTimeStart)
+                                button.style.borderColor = getColorForButton(buttonTimeStart)
 
                                 checkBox.setAttribute("value", data[i].Zid + "-" + buttonTimeStart + "-" + buttonTimeEnd + "-" + data[i].LastModified)
                                 span.appendChild(button)
@@ -248,6 +256,7 @@ function desks() {
                                 var buttonTimeEnd = getButtonTime(12)
 
                                 button.style.backgroundColor = getColorForButton(buttonTimeStart)
+                                button.style.borderColor = getColorForButton(buttonTimeStart)
 
                                 checkBox.setAttribute("value", data[i].Zid + "-" + buttonTimeStart + "-" + buttonTimeEnd + "-" + data[i].LastModified)
                                 span.appendChild(button)
@@ -258,6 +267,7 @@ function desks() {
                                 var buttonTimeEnd = getButtonTime(14)
 
                                 button.style.backgroundColor = getColorForButton(buttonTimeStart)
+                                button.style.borderColor = getColorForButton(buttonTimeStart)
 
                                 checkBox.setAttribute("value", data[i].Zid + "-" + buttonTimeStart + "-" + buttonTimeEnd + "-" + data[i].LastModified)
                                 span.appendChild(button)
@@ -268,6 +278,7 @@ function desks() {
                                 var buttonTimeEnd = getButtonTime(16)
 
                                 button.style.backgroundColor = getColorForButton(buttonTimeStart)
+                                button.style.borderColor = getColorForButton(buttonTimeStart)
 
                                 checkBox.setAttribute("value", data[i].Zid + "-" + buttonTimeStart + "-" + buttonTimeEnd + "-" + data[i].LastModified)
                                 span.appendChild(button)
@@ -278,6 +289,7 @@ function desks() {
                                 var buttonTimeEnd = getButtonTime(18)
                                
                                 button.style.backgroundColor = getColorForButton(buttonTimeStart)
+                                button.style.borderColor = getColorForButton(buttonTimeStart)
 
                                 checkBox.setAttribute("value", data[i].Zid + "-" + buttonTimeStart + "-" + buttonTimeEnd + "-" + data[i].LastModified)
                                 span.appendChild(button)
