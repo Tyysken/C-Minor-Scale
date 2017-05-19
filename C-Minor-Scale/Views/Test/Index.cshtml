@@ -1,0 +1,29 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Tests</title>
+    <link rel="stylesheet" href="~/Content/qunit-2.3.2.css" />
+    <script src="~/Scripts/qunit-2.3.2.js"></script>
+
+    <!-- BEGIN TESTS -->
+    <script>
+        QUnit.test("dummy test", function (assert) {
+            var a = 1, b = 2, c = 2
+            //equal(a, b) // Should fail
+            assert.equal(b, c) // Should pass
+        });
+    </script>
+    <!-- END TESTS -->
+</head>
+<body>
+    <div> 
+        <div id="qunit"></div>
+    </div>
+</body>
+</html>

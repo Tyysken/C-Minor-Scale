@@ -238,6 +238,7 @@
     <Compile Include="Controllers\BookingController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -263,6 +264,7 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\Login.css" />
+    <Content Include="Content\qunit-2.3.2.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -307,6 +309,7 @@
     <Content Include="Scripts\moment-timezone-with-data-2012-2022.min.js" />
     <Content Include="Scripts\moment-with-locales.min.js" />
     <Content Include="Scripts\MyBookings.js" />
+    <Content Include="Scripts\qunit-2.3.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\SHA256.js" />
@@ -328,6 +331,7 @@
     <Content Include="Views\Booking\Student.cshtml" />
     <Content Include="Views\Login\Login.cshtml" />
     <Content Include="Views\Booking\Bookings.cshtml" />
+    <Content Include="Views\Test\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
