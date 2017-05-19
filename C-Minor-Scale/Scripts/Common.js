@@ -1,4 +1,6 @@
-﻿function getHeaders() {
+﻿const twoHoursInMS = 720000;
+
+function getHeaders() {
     return {
         'idesk-auth-method': 'up',
         'idesk-auth-username': localStorage.getItem("user"),

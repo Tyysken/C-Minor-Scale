@@ -41,6 +41,7 @@ namespace C_Minor_Scale.Services
             foreach (var booking in bookings)
             {
                 var response = await PostBooking(user, booking);
+                var message = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode == System.Net.HttpStatusCode.OK)
                 {
                     successfulBookings.Add(booking.Zid);
