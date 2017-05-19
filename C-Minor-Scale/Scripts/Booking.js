@@ -14,25 +14,13 @@ var newTimeFrom = 0
 var newTimeToo = 0
 
 $(document).ready(function () {
-    document.getElementById("date").valueAsDate = new Date()
-    LookFromTime = getButtonTime($('#date').value, 8)
-    LookTooTime = getButtonTime($('#date').value, 18)
-
+    LookFromTime = getButtonTime($('#date')[0].value, 8)
+    LookTooTime = getButtonTime($('#date')[0].value, 18)
     StatusOfDesks(LookFromTime, LookTooTime)
 
     $("#dateButton").click(function () {
-        newTimeFrom = new Date(document.getElementById('date').value)
-        newTimeToo = new Date(document.getElementById('date').value)
-        newTimeFrom.setHours('08')
-        newTimeFrom.setMinutes('00')
-        newTimeFrom.setSeconds('00')
-        newTimeFrom.setMilliseconds('00')
-        newTimeToo.setHours('18')
-        newTimeToo.setMinutes('00')
-        newTimeToo.setSeconds('00')
-        newTimeToo.setMilliseconds('00')
-        newTimeFrom = Math.round(newTimeFrom)
-        newTimeToo = Math.round(newTimeToo)
+        newTimeFrom = getButtonTime($('#date')[0].value, 8)
+        newTimeToo = getButtonTime($('#date')[0].value, 18)
 
         StatusOfDesks(newTimeFrom, newTimeToo)
     });
@@ -53,13 +41,15 @@ function checkAllTimeButtons() {
         if ($(this).is(":checked")) {
             listOfZid.push(parseInt(this.value.split('-')[0]))
             BookingStartTime = (parseFloat(this.value.split('-')[1]))
-            BookingEndTime = (parseFloat(this.value.split('-')[2])) - 1
+            BookingEndTime = (parseFloat(this.value.split('-')[2]))
             lastModified = (parseFloat(this.value.split('-')[3]))
         }
     });
 }
 
 function StatusOfDesks(startTime, endTime) {
+    console.log("StartTime: " + startTime);
+    console.log("EndTime: " + endTime);
     $.ajax({
         url: "https://stage-booking.intelligentdesk.com/booking?from=" + startTime + "&until=" + endTime + "&parent=5115225993379840",
         type: "GET",
@@ -113,17 +103,6 @@ function desks() {
 }
 
 function bookings() {
-    /*
-    console.log(JSON.stringify({
-        "Owner": localStorage.getItem("user"),
-        "Lastmodified": lastModified,
-        "From": BookingStartTime,
-        "Until": BookingEndTime,
-        "Zids": listOfZid,
-        "Subject": "bookingtest",
-        "Private": "false"
-    }))*/
-
     $.ajax({
         url: "http://localhost:60156/api/bookingapi/multi/",
         type: "POST",

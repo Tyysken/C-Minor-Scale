@@ -69,7 +69,7 @@ function getButtonTime(dateString, hour) {
 
 function getColorForButton(deskId, userName, startTime, bookings) {
     for (var i = 0; i < bookings.length; ++i) {
-        if (bookings[i].Zid === deskId && bookings[i].From === startTime) {
+        if (bookings[i].Zid === deskId && bookings[i].From == startTime) {
             if (bookings[i].Owner == userName) {
                 return "blue"
             }
