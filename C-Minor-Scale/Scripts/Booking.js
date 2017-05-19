@@ -10,6 +10,8 @@ var BookingEndTime = 0
 var teacher = 6570433172733952
 var LookFromTime = 0
 var LookTooTime = 0
+var newTimeFrom = 0
+var newTimeToo = 0
 
 $(document).ready(function () {
     document.getElementById("date").valueAsDate = new Date()
@@ -20,8 +22,8 @@ $(document).ready(function () {
     StatusOfDesks(LookFromTime, LookTooTime)
 
     $("#dateButton").click(function () {
-        var newTimeFrom = new Date(document.getElementById('date').value)
-        var newTimeToo = new Date(document.getElementById('date').value)
+        newTimeFrom = new Date(document.getElementById('date').value)
+        newTimeToo = new Date(document.getElementById('date').value)
         newTimeFrom.setHours('08')
         newTimeFrom.setMinutes('00')
         newTimeFrom.setSeconds('00')
@@ -60,9 +62,9 @@ function checkAllTimeButtons() {
     });
 }
 
-function StatusOfDesks(LookFromTime, LookTooTime) {
+function StatusOfDesks(startTime, endTime) {
     $.ajax({
-        url: "https://stage-booking.intelligentdesk.com/booking?from=" + LookFromTime + "&until=" + LookTooTime + "&parent=5115225993379840",
+        url: "https://stage-booking.intelligentdesk.com/booking?from=" + startTime + "&until=" + endTime + "&parent=5115225993379840",
         type: "GET",
         headers: getHeaders(),
         contentType: 'application/vnd.idesk-v5+json',
@@ -91,15 +93,14 @@ function desks() {
             var parentdivRoom2 = document.getElementById('1330')
             $(parentdivRoom2).empty()
 
+            listOfDesks = []
             for (var i = 0; i < data.length; i++) {
                 if (data[i].Type == 'DESK') {
 
                     var Desk = document.createElement("h3")
                     var DeskTitle = document.createTextNode(data[i].Name.split(" ")[1])
                     Desk.appendChild(DeskTitle)
-
                     listOfDesks.push(Desk.innerHTML)
-                    
                 }
             }
             listOfDesks.sort(function (a, b) { return a - b })
@@ -235,6 +236,7 @@ function desks() {
                                     timeBooked.push(listOfBookings[k].From)
                                     ownerOfTimeBooked.push(listOfBookings[k].Owner)
                                 }
+             
                             }
                             button.type = "button"
 
