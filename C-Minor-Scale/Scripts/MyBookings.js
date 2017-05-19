@@ -18,6 +18,7 @@ function updateBookingsTable() {
                 tdid = "booking" + i;
                 $("<tr><td id=\"" + tdid + "\"></td><td>" + bookings[i].Subject + "</td><td>" + moment.utc(bookings[i].From).tz("Europe/Stockholm").format("YYYY-MM-DD HH:mm") + "</td><td>" + moment.utc(bookings[i].Until).tz("Europe/Stockholm").format("YYYY-MM-DD HH:mm") + "</td>").appendTo("#bookingsTbody");
                 updateBookingsTableEntry(tdid, bookings[i].Zid);
+                //$('#bookingsTable').DataTable();
             }
         },
         error: function (data) {
@@ -40,6 +41,7 @@ function updateBookingsTableEntry(tdid, zid) {
         contentType: 'application/vnd.idesk-v5+json',
         success: function (zoneInfo) {
             $("#" + tdid).replaceWith("<td>" + zoneInfo.Name + "</td>");
+            $('#bookingsTable').DataTable();
         },
         error: function (data) {
             alert(JSON.parse(data.responseText).Message);
