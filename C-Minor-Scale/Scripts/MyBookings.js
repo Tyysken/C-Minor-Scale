@@ -17,7 +17,8 @@ function updateBookingsTable() {
             bookings.sort(SortByStart)
             for (var i = 0; i < bookings.length; i++) {
                 tdid = "booking" + i;
-                $("<tr><td id=\"" + tdid + "\"></td><td>" + bookings[i].Subject + "</td><td>" + moment.utc(bookings[i].From).tz("Europe/Stockholm").format("YYYY-MM-DD HH:mm") + "</td><td>" + moment.utc(bookings[i].Until).tz("Europe/Stockholm").format("YYYY-MM-DD HH:mm") + "</td>"+"<td>"+img+"</td>").appendTo("#bookingsTbody");
+                $("<tr><td id=\"" + tdid + "\"></td><td>" + bookings[i].Subject + "</td><td>" + moment.utc(bookings[i].From).tz("Europe/Stockholm").format("YYYY-MM-DD HH:mm") + "</td><td>" + moment.utc(bookings[i].Until).tz("Europe/Stockholm").format("YYYY-MM-DD HH:mm") + "</td>" + "<td id=\"" + bookings[i].Bid + "\">" + img + "</td>").appendTo("#bookingsTbody");
+                $("#" + bookings[i].Bid).click(deleteBooking)
                 updateBookingsTableEntry(tdid, bookings[i].Zid);
             }
         },
@@ -25,12 +26,6 @@ function updateBookingsTable() {
             alert(JSON.parse(data.responseText).Message);
         }
     });
-}
-
-function SortByStart(a, b) {
-    var aFrom = a.From;
-    var bFrom = b.From;
-    return ((aFrom < bFrom) ? -1 : ((aFrom > bFrom) ? 1 : 0));
 }
 
 function updateBookingsTableEntry(tdid, zid) {
@@ -44,6 +39,22 @@ function updateBookingsTableEntry(tdid, zid) {
         },
         error: function (data) {
             alert(JSON.parse(data.responseText).Message);
+        }
+    });
+}
+
+function deleteBooking(event) {
+    var bid = event.currentTarget.id;
+    $.ajax({
+        url: "https://stage-booking.intelligentdesk.com/booking/" + bid,
+        type: "DELETE",
+        headers: getHeaders(),
+        contentType: 'application/vnd.idesk-v5+json',
+        success: function () {
+            event.currentTarget.parentElement.remove();
+        },
+        error: function (data) {
+            alert("Could not delete booking");
         }
     });
 }
