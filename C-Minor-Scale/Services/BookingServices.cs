@@ -26,7 +26,14 @@ namespace C_Minor_Scale.Services
         /// <returns>The response message from the Rol API</returns>
         public static async Task<HttpResponseMessage> PostBooking(User user, Booking booking)
         {
-            // TODO: Check if user is high prio, check if zone is booked. Cancel booking if user is of higher prio
+            if (await UserServices.GetUserRole(user) == UserServices.Role.Teacher)
+            {
+                var bookings = GetBookingsByZone(user, booking.Zid, booking.From, booking.Until); 
+
+                // If booker is student cancel the booking
+
+            }
+
             return await SendBookingToRol(user, booking);
         }
 
@@ -43,8 +50,7 @@ namespace C_Minor_Scale.Services
             foreach (var booking in bookings)
             {
                 var response = await PostBooking(user, booking);
-                var message = await response.Content.ReadAsStringAsync();
-                if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                if (response.IsSuccessStatusCode)
                 {
                     successfulBookings.Add(booking.Zid);
                 }
@@ -70,25 +76,70 @@ namespace C_Minor_Scale.Services
             // Deserialize to json object
             var jArr = JArray.Parse(content);
 
-            //string js = jArr[0].ToString();
-            //var json = JsonConvert.DeserializeObject<BookingJson>(jArr[0].ToString());
-            var json = jArr[0].ToObject<BookingJson>();
-            // For each booking
-                // Get owner
-                // Get parent
-                // Insert parent
-            // Serialize json to string
+            List<BookingJson> bookings = new List<BookingJson>();
 
-            response.Content = new StringContent(content, System.Text.Encoding.UTF8, "application/json");
+            foreach (var item in jArr)
+            {
+                var json = item.ToObject<BookingJson>();
+                // Get parent
+                json.OwnerParent = await UserServices.GetParent(json.Owner);
+                bookings.Add(json);
+            }
+
+            // Serialize json to string
+            var serialized = JsonConvert.SerializeObject(bookings);
+            response.Content = new StringContent(serialized, System.Text.Encoding.UTF8, "application/json");
 
             return response;
         }
 
-        private static async Task<HttpResponseMessage> CancelBookingAtRol(User user)
+        /// <summary>
+        /// Send request to delete booking to Rol API
+        /// </summary>
+        /// <param name="user">The user sending the delete request</param>
+        /// <param name="bid">The id of the booking to delete</param>
+        /// <returns></returns>
+        public static async Task<HttpResponseMessage> CancelBooking(User user, long bid)
         {
-            HttpResponseMessage response = new HttpResponseMessage();
-            response.StatusCode = System.Net.HttpStatusCode.NotImplemented;
+            HttpResponseMessage response = null;
+
+            using (var httpClient = new HttpClient())
+            {
+                PrepareHttpClient(httpClient, user);
+                response = await httpClient.DeleteAsync(ApiBaseUrl + "/" + bid);
+            }
+
             return response;
+        }
+
+        private static async Task<Booking> GetBooking(User user, long bid)
+        {
+            Booking booking = null;
+
+            using (var httpClient = new HttpClient())
+            {
+                PrepareHttpClient(httpClient, user);
+                var response = await httpClient.GetAsync(ApiBaseUrl + "/" + bid);
+
+                booking = JsonConvert.DeserializeObject<Booking>(await response.Content.ReadAsStringAsync());
+            }
+
+            return booking;
+        }
+
+        private static async Task<List<Booking>> GetBookingsByZone(User user, long zid, long from, long until)
+        {
+            List<Booking> bookings;
+
+            using (var httpClient = new HttpClient())
+            {
+                PrepareHttpClient(httpClient, user);
+                var response = await httpClient.GetAsync(ApiBaseUrl + "?zid=" + zid + "&from=" + from + "&until=" + until);
+
+                bookings = JsonConvert.DeserializeObject<List<Booking>>(await response.Content.ReadAsStringAsync());
+            }
+
+            return bookings;
         }
 
         private static async Task<HttpResponseMessage> SendBookingToRol(User user, Booking booking)
