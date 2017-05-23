@@ -19,7 +19,10 @@ namespace C_Minor_Scale.Services
 
         public static async Task<Role> GetUserRole(User user)
         {
-            user = await GetUser(user);
+            if(user.Parent == 0)
+            {
+                user = await GetUser(user);
+            }
 
             switch(user.Parent)
             {
