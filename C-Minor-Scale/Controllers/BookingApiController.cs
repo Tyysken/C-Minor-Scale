@@ -12,6 +12,13 @@ namespace C_Minor_Scale.Controllers
 {
     public class BookingApiController : ApiController
     {
+        [ActionName("DefaultAction")]
+        public async Task<HttpResponseMessage> Get()
+        {
+
+            return Request.CreateResponse(HttpStatusCode.NotImplemented);
+        }
+
         // POST api/<controller>
         [ActionName("DefaultAction")]
         public async Task<HttpResponseMessage> Post([FromBody]CreateBookingRequestObject request)

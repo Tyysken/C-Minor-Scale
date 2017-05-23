@@ -8,7 +8,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using C_Minor_Scale;
 using C_Minor_Scale.Controllers;
 
-namespace C_Minor_Scale.Tests.Controllers
+namespace C_Minor_Scale.Tests.ControllerTests
 {
     [TestClass]
     public class ValuesControllerTest

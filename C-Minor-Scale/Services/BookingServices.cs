@@ -7,12 +7,14 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using C_Minor_Scale.Json;
+using Newtonsoft.Json.Linq;
 
 namespace C_Minor_Scale.Services
 {
     public static class BookingServices
     {
-        private const string ApiBaseUrl = "https://stage-booking.intelligentdesk.com/booking/";
+        private const string ApiBaseUrl = "https://stage-booking.intelligentdesk.com/booking";
         private const long teacherId = 6570433172733952;
         private const long studentId = 5124030458232832;
 
@@ -55,6 +57,37 @@ namespace C_Minor_Scale.Services
             }
             
             return successfulBookings;
+        }
+
+        public static async Task<HttpResponseMessage> GetBookings(User user, string uri)
+        {
+            HttpResponseMessage response = null;
+
+            using (var httpClient = new HttpClient())
+            {
+                PrepareHttpClient(httpClient, user);
+                response = await httpClient.GetAsync(ApiBaseUrl + uri);
+            }
+
+            if (!response.IsSuccessStatusCode)
+                return response;
+
+            string content = await response.Content.ReadAsStringAsync();
+            // Deserialize to json object
+            var jArr = JArray.Parse(content);
+
+            //string js = jArr[0].ToString();
+            //var json = JsonConvert.DeserializeObject<BookingJson>(jArr[0].ToString());
+            var json = jArr[0].ToObject<BookingJson>();
+            // For each booking
+                // Get owner
+                // Get parent
+                // Insert parent
+            // Serialize json to string
+
+            response.Content = new StringContent(content, System.Text.Encoding.UTF8, "application/json");
+
+            return response;
         }
 
         /// <summary>

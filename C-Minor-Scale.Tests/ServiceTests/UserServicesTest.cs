@@ -4,7 +4,7 @@ using C_Minor_Scale.Models;
 using C_Minor_Scale.Services;
 using System.Threading.Tasks;
 
-namespace C_Minor_Scale.Tests.Services
+namespace C_Minor_Scale.Tests.ControllerTests
 {
     [TestClass]
     public class UserServicesTest
