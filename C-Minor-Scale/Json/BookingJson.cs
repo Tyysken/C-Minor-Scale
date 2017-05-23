@@ -22,5 +22,8 @@ namespace C_Minor_Scale.Json
         public string Desc { get; set; }
         public string Source { get; set; }
         public bool Private { get; set; }
+
+        public List<object> Attendees { get; set; }
+        public object Properties { get; set; }
     }
 }

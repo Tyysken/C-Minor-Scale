@@ -15,8 +15,7 @@ namespace C_Minor_Scale.Controllers
         [ActionName("DefaultAction")]
         public async Task<HttpResponseMessage> Get()
         {
-
-            return Request.CreateResponse(HttpStatusCode.NotImplemented);
+            return await BookingServices.GetBookings(getLoginInformation(Request), Request.RequestUri.Query);
         }
 
         // POST api/<controller>

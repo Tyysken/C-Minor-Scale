@@ -76,16 +76,19 @@ namespace C_Minor_Scale.Services
             // Deserialize to json object
             var jArr = JArray.Parse(content);
 
-            //string js = jArr[0].ToString();
-            //var json = JsonConvert.DeserializeObject<BookingJson>(jArr[0].ToString());
-            var json = jArr[0].ToObject<BookingJson>();
-            // For each booking
-                // Get owner
-                // Get parent
-                // Insert parent
-            // Serialize json to string
+            List<BookingJson> bookings = new List<BookingJson>();
 
-            response.Content = new StringContent(content, System.Text.Encoding.UTF8, "application/json");
+            foreach (var item in jArr)
+            {
+                var json = item.ToObject<BookingJson>();
+                // Get parent
+                json.OwnerParent = await UserServices.GetParent(json.Owner);
+                bookings.Add(json);
+            }
+
+            // Serialize json to string
+            var serialized = JsonConvert.SerializeObject(bookings);
+            response.Content = new StringContent(serialized, System.Text.Encoding.UTF8, "application/json");
 
             return response;
         }
@@ -103,7 +106,7 @@ namespace C_Minor_Scale.Services
             using (var httpClient = new HttpClient())
             {
                 PrepareHttpClient(httpClient, user);
-                response = await httpClient.DeleteAsync(ApiBaseUrl + bid);
+                response = await httpClient.DeleteAsync(ApiBaseUrl + "/" + bid);
             }
 
             return response;
@@ -116,7 +119,7 @@ namespace C_Minor_Scale.Services
             using (var httpClient = new HttpClient())
             {
                 PrepareHttpClient(httpClient, user);
-                var response = await httpClient.GetAsync(ApiBaseUrl + bid);
+                var response = await httpClient.GetAsync(ApiBaseUrl + "/" + bid);
 
                 booking = JsonConvert.DeserializeObject<Booking>(await response.Content.ReadAsStringAsync());
             }

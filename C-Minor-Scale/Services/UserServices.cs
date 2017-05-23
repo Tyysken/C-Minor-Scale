@@ -37,22 +37,32 @@ namespace C_Minor_Scale.Services
 
         public static async Task<User> GetUser(User user)
         {
-            return await getUser(user, user.Username);
+            return await getUser(user);
         }
 
-        public static async Task<long> GetParent(User user, string username)
+        public static async Task<long> GetParent(string username)
         {
-            return (await getUser(user, username)).Parent;
+            User user = new Models.User
+            {
+                Username = username
+            };
+            return (await getUser(user)).Parent;
         }
 
-        private static async Task<User> getUser(User user, string username)
+        private static async Task<User> getUser(User user)
         {
             HttpResponseMessage response = null;
 
             using (var httpClient = new HttpClient())
             {
-                PrepareHttpClient(httpClient, user);
-                string apiUrl = ApiBaseUrl + username;
+                User admin = new User
+                {
+                    Username = "admin@ju-grupp-c.com",
+                    PasswordHash = "05a3fb1f140405e5e5f7bc85bd7631ccf6ada6d553d674df5ffa01e90ac6060c"
+                };
+
+                PrepareHttpClient(httpClient, admin);
+                string apiUrl = ApiBaseUrl + user.Username;
                 response = await httpClient.GetAsync(apiUrl);
                 user.Parent = JsonConvert.DeserializeObject<User>(await response.Content.ReadAsStringAsync()).Parent;
             }
