@@ -315,7 +315,9 @@
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\Service\BookingService.js" />
+    <Content Include="Scripts\Service\MyBookingsService.js" />
     <Content Include="Scripts\SHA256.js" />
+    <Content Include="Scripts\Test\MyBookings.Test.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

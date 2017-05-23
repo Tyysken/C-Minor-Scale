@@ -28,12 +28,6 @@ function updateBookingsTable() {
     });
 }
 
-function SortByStart(a, b) {
-    var aFrom = a.From;
-    var bFrom = b.From;
-    return ((aFrom < bFrom) ? -1 : ((aFrom > bFrom) ? 1 : 0));
-}
-
 function updateBookingsTableEntry(tdid, zid) {
     $.ajax({
         url: "https://stage-core.intelligentdesk.com/zone/" + zid,
