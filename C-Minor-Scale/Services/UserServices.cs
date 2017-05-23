@@ -34,12 +34,22 @@ namespace C_Minor_Scale.Services
 
         public static async Task<User> GetUser(User user)
         {
+            return await getUser(user, user.Username);
+        }
+
+        public static async Task<long> GetParent(User user, string username)
+        {
+            return (await getUser(user, username)).Parent;
+        }
+
+        private static async Task<User> getUser(User user, string username)
+        {
             HttpResponseMessage response = null;
 
             using (var httpClient = new HttpClient())
             {
                 PrepareHttpClient(httpClient, user);
-                string apiUrl = ApiBaseUrl + user.Username;
+                string apiUrl = ApiBaseUrl + username;
                 response = await httpClient.GetAsync(apiUrl);
                 user.Parent = JsonConvert.DeserializeObject<User>(await response.Content.ReadAsStringAsync()).Parent;
             }
