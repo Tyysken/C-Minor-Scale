@@ -51,7 +51,7 @@ function StatusOfDesks(startTime, endTime) {
     console.log("StartTime: " + startTime);
     console.log("EndTime: " + endTime);
     $.ajax({
-        url: "https://stage-booking.intelligentdesk.com/booking?from=" + startTime + "&until=" + endTime + "&parent=5115225993379840",
+        url: "http://localhost:60156/api/bookingapi?from=" + startTime + "&until=" + endTime + "&parent=5115225993379840",
         type: "GET",
         headers: getHeaders(),
         contentType: 'application/vnd.idesk-v5+json',

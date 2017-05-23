@@ -28,10 +28,16 @@ namespace C_Minor_Scale.Services
         {
             if (await UserServices.GetUserRole(user) == UserServices.Role.Teacher)
             {
-                var bookings = GetBookingsByZone(user, booking.Zid, booking.From, booking.Until); 
+                var response = await GetBookings(user, "?zid=" + booking.Zid + "&from=" + booking.From + "&until=" + booking.Until);
+                var bookings = JsonConvert.DeserializeObject<List<BookingJson>>(await response.Content.ReadAsStringAsync());
 
-                // If booker is student cancel the booking
-
+                foreach (var item in bookings)
+                {
+                    if(item.OwnerParent == studentId)
+                    {
+                        await CancelBooking(user, item.Bid);
+                    }
+                }
             }
 
             return await SendBookingToRol(user, booking);
@@ -72,23 +78,21 @@ namespace C_Minor_Scale.Services
             if (!response.IsSuccessStatusCode)
                 return response;
 
-            string content = await response.Content.ReadAsStringAsync();
-            // Deserialize to json object
-            var jArr = JArray.Parse(content);
-
+            var bookingList = JsonConvert.DeserializeObject<List<BookingJson>>(await response.Content.ReadAsStringAsync());
+            
             List<BookingJson> bookings = new List<BookingJson>();
 
-            foreach (var item in jArr)
+            foreach (var item in bookingList)
             {
-                var json = item.ToObject<BookingJson>();
-                // Get parent
-                json.OwnerParent = await UserServices.GetParent(json.Owner);
-                bookings.Add(json);
+                item.OwnerParent = await UserServices.GetParent(item.Owner);
+                bookings.Add(item);
             }
 
             // Serialize json to string
-            var serialized = JsonConvert.SerializeObject(bookings);
-            response.Content = new StringContent(serialized, System.Text.Encoding.UTF8, "application/json");
+            response.Content = new StringContent(
+                JsonConvert.SerializeObject(bookings), 
+                System.Text.Encoding.UTF8, 
+                "application/json");
 
             return response;
         }
@@ -99,7 +103,7 @@ namespace C_Minor_Scale.Services
         /// <param name="user">The user sending the delete request</param>
         /// <param name="bid">The id of the booking to delete</param>
         /// <returns></returns>
-        public static async Task<HttpResponseMessage> CancelBooking(User user, long bid)
+        private static async Task<HttpResponseMessage> CancelBooking(User user, long bid)
         {
             HttpResponseMessage response = null;
 
@@ -110,36 +114,6 @@ namespace C_Minor_Scale.Services
             }
 
             return response;
-        }
-
-        private static async Task<Booking> GetBooking(User user, long bid)
-        {
-            Booking booking = null;
-
-            using (var httpClient = new HttpClient())
-            {
-                PrepareHttpClient(httpClient, user);
-                var response = await httpClient.GetAsync(ApiBaseUrl + "/" + bid);
-
-                booking = JsonConvert.DeserializeObject<Booking>(await response.Content.ReadAsStringAsync());
-            }
-
-            return booking;
-        }
-
-        private static async Task<List<Booking>> GetBookingsByZone(User user, long zid, long from, long until)
-        {
-            List<Booking> bookings;
-
-            using (var httpClient = new HttpClient())
-            {
-                PrepareHttpClient(httpClient, user);
-                var response = await httpClient.GetAsync(ApiBaseUrl + "?zid=" + zid + "&from=" + from + "&until=" + until);
-
-                bookings = JsonConvert.DeserializeObject<List<Booking>>(await response.Content.ReadAsStringAsync());
-            }
-
-            return bookings;
         }
 
         private static async Task<HttpResponseMessage> SendBookingToRol(User user, Booking booking)

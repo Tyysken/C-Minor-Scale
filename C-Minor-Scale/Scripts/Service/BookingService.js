@@ -1,4 +1,7 @@
-﻿// Filter out all elements that is not of Type DESK
+﻿const teacherId = 6570433172733952;
+const studentId = 5124030458232832;
+
+// Filter out all elements that is not of Type DESK
 // Returns an array of desk objects
 function filterDesks(data) {
     var desks = [];
@@ -72,8 +75,11 @@ function getColorForButton(deskId, userName, startTime, bookings) {
         if (bookings[i].Zid === deskId && bookings[i].From == startTime) {
             if (bookings[i].Owner == userName) {
                 return "blue"
-            }
-            else {
+            } else if (bookings[i].OwnerParent === studentId) {
+                return "yellow"
+            } else if (bookings[i].OwnerParent === teacherId) {
+                return "violet"
+            } else {
                 return "red"
             }
         }
