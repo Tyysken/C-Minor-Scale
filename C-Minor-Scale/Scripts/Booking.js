@@ -14,6 +14,7 @@ var newTimeFrom = 0
 var newTimeToo = 0
 
 $(document).ready(function () {
+    document.getElementById('date').valueAsDate = new Date()
     LookFromTime = getButtonTime($('#date')[0].value, 8)
     LookTooTime = getButtonTime($('#date')[0].value, 18)
     StatusOfDesks(LookFromTime, LookTooTime)
@@ -61,7 +62,15 @@ function StatusOfDesks(startTime, endTime) {
         },
 
         error: function (data) {
-            alert(data.responseText.Message);
+            console.log(data.responseText.Message)
+            switch (data.status) {
+                case 400:
+                    alert("Select a valid date")
+                    break;
+                default:
+                    alert("Something went wrong, please try again")
+                    break;
+            }
         }
     });
 }
@@ -95,8 +104,9 @@ function desks() {
             checkboxsButton()
         },
 
-        error: function (data) {
-            alert(JSON.parse(data.responseText).Message);
+        error: function (data)
+        {
+            alert(JSON.parse(data.responseText).Message)
         }
     });
 
@@ -124,7 +134,17 @@ function bookings() {
         },
 
         error: function (data) {
-            alert("Error");
+            switch (JSON.parse(data.responseText).Message) {
+                case "E_MULTI_BOOKING_PARTIALLY_FAILED":
+                    alert("Not all desks were successfully booked")
+                    break;
+                case "E_MULTI_BOOKING_FAILED":
+                    alert("Something went wrong with your bookings")
+                    break;
+                default:
+                    alert("Something went wrong, please try again")
+                    break;
+            }
             console.log(data.responseText);
         }
     });
@@ -153,7 +173,17 @@ function book() {
         },
 
         error: function (data) {
-            alert("Error");
+            switch (JSON.parse(data.responseText).Message) {
+                case "E_MULTI_BOOKING_PARTIALLY_FAILED":
+                    alert("You can only book one desk as a student")
+                    break;
+                case "E_MULTI_BOOKING_FAILED":
+                    alert("Something went wrong with your bookings")
+                    break;
+                default:
+                    alert("Something went wrong, please try again")
+                    break;
+            }
             console.log(data.responseText);
         }
     });
@@ -224,3 +254,4 @@ function checkboxsButton() {
         init();
     });
 };
+  
