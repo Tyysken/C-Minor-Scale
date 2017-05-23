@@ -14,26 +14,13 @@ var newTimeFrom = 0
 var newTimeToo = 0
 
 $(document).ready(function () {
-    document.getElementById("date").valueAsDate = new Date()
-    LookFromTime = getButtonTime(8)
-    LookTooTime = getButtonTime(18)
-    console.log(LookFromTime, LookTooTime)
-
+    LookFromTime = getButtonTime($('#date')[0].value, 8)
+    LookTooTime = getButtonTime($('#date')[0].value, 18)
     StatusOfDesks(LookFromTime, LookTooTime)
 
     $("#dateButton").click(function () {
-        newTimeFrom = new Date(document.getElementById('date').value)
-        newTimeToo = new Date(document.getElementById('date').value)
-        newTimeFrom.setHours('08')
-        newTimeFrom.setMinutes('00')
-        newTimeFrom.setSeconds('00')
-        newTimeFrom.setMilliseconds('00')
-        newTimeToo.setHours('18')
-        newTimeToo.setMinutes('00')
-        newTimeToo.setSeconds('00')
-        newTimeToo.setMilliseconds('00')
-        newTimeFrom = Math.round(newTimeFrom)
-        newTimeToo = Math.round(newTimeToo)
+        newTimeFrom = getButtonTime($('#date')[0].value, 8)
+        newTimeToo = getButtonTime($('#date')[0].value, 18)
 
         StatusOfDesks(newTimeFrom, newTimeToo)
     });
@@ -54,28 +41,27 @@ function checkAllTimeButtons() {
         if ($(this).is(":checked")) {
             listOfZid.push(parseInt(this.value.split('-')[0]))
             BookingStartTime = (parseFloat(this.value.split('-')[1]))
-            BookingEndTime = (parseFloat(this.value.split('-')[2])) - 1
+            BookingEndTime = (parseFloat(this.value.split('-')[2]))
             lastModified = (parseFloat(this.value.split('-')[3]))
-
-
         }
     });
 }
 
 function StatusOfDesks(startTime, endTime) {
+    console.log("StartTime: " + startTime);
+    console.log("EndTime: " + endTime);
     $.ajax({
         url: "https://stage-booking.intelligentdesk.com/booking?from=" + startTime + "&until=" + endTime + "&parent=5115225993379840",
         type: "GET",
         headers: getHeaders(),
         contentType: 'application/vnd.idesk-v5+json',
         success: function (data) {
-            console.log(data)
             listOfBookings = data
             desks()
         },
 
         error: function (data) {
-            alert(JSON.parse(data.responseText).Message);
+            alert(data.responseText.Message);
         }
     });
 }
@@ -87,222 +73,25 @@ function desks() {
         headers: getHeaders(),
         contentType: 'application/vnd.idesk-v5+json',
         success: function (data) {
+            var desks = filterDesks(data);
+            desks.sort(compareDesks);
+
             var parentdivRoom1 = document.getElementById('2440')
             $(parentdivRoom1).empty()
 
             var parentdivRoom2 = document.getElementById('1330')
             $(parentdivRoom2).empty()
 
-            listOfDesks = []
-            for (var i = 0; i < data.length; i++) {
-                if (data[i].Type == 'DESK') {
+            var date = $('#date')[0].value;
 
-                    var Desk = document.createElement("h3")
-                    var DeskTitle = document.createTextNode(data[i].Name.split(" ")[1])
-                    Desk.appendChild(DeskTitle)
-                    listOfDesks.push(Desk.innerHTML)
+            $.each(desks, function (index, element) {
+                if (element.Name.split(" ")[1] < 5) {
+                    parentdivRoom1.appendChild(createButtonRow(element, date, listOfBookings, localStorage.getItem("user")));
+                } else {
+                    parentdivRoom2.appendChild(createButtonRow(element, date, listOfBookings, localStorage.getItem("user")));
                 }
-            }
-            listOfDesks.sort(function (a, b) { return a - b })
-            for (var i = 0; i < listOfDesks.length; i++) {
-                listOfDesks[i] = "Plats "+ listOfDesks[i]
-            }
+            });
             
-            console.log(listOfDesks)
-
-            for (var i = 0; i < listOfDesks.length; i++) {
-                var timeButtons = 5
-
-                    var Desk = document.createElement("h3")
-                    var DeskTitle = document.createTextNode(listOfDesks[i])
-                    Desk.appendChild(DeskTitle)
-
-
-                    if (listOfDesks[i].split(" ")[1] < 5) {
-
-                        parentdivRoom1.appendChild(Desk)
-
-
-                        for (var j = 0; j < timeButtons; j++) {
-                            timeBooked.length = 0
-                            ownerOfTimeBooked.length = 0
-                            var span = document.createElement('span')
-                            span.setAttribute("class", "button-checkbox")
-
-                            var checkBox = document.createElement('input')
-                            checkBox.setAttribute("class", "hidden")
-                            checkBox.type = "checkbox"
-
-
-                            var button = document.createElement('button')
-                            button.setAttribute("class", "btn btn-primary btn-lg")
-                            button.setAttribute("style", "margin-left: 2px")
-                            for (var k = 0; k < listOfBookings.length; k++) {
-                                if (data[i].Zid == listOfBookings[k].Zid) {
-                                    timeBooked.push(listOfBookings[k].From)
-                                    ownerOfTimeBooked.push(listOfBookings[k].Owner)
-                                }
-                            }
-
-                            button.type = "button"
-
-                            if (j == 0) {
-                                button.innerHTML = "08-10"
-
-                                var buttonTimeStart = getButtonTime(8);
-                                var buttonTimeEnd = getButtonTime(10);
-
-
-                                button.style.backgroundColor = getColorForButton(buttonTimeStart)
-                                button.style.borderColor = getColorForButton(buttonTimeStart)
-
-
-                                checkBox.setAttribute("value", data[i].Zid + "-" + buttonTimeStart + "-" + buttonTimeEnd + "-" + data[i].LastModified)
-                                span.appendChild(button)
-                            }
-                            else if (j == 1) {
-                                button.innerHTML = ("10-12")
-                                var buttonTimeStart = getButtonTime(10)
-                                var buttonTimeEnd = getButtonTime(12)
-
-                                button.style.backgroundColor = getColorForButton(buttonTimeStart)
-                                button.style.borderColor = getColorForButton(buttonTimeStart)
-
-                                checkBox.setAttribute("value", data[i].Zid + "-" + buttonTimeStart + "-" + buttonTimeEnd + "-" + data[i].LastModified)
-                                span.appendChild(button)
-                            }
-                            else if (j == 2) {
-                                button.innerHTML = ("12-14")
-                                var buttonTimeStart = getButtonTime(12)
-                                var buttonTimeEnd = getButtonTime(14)
-
-                                button.style.backgroundColor = getColorForButton(buttonTimeStart)
-                                button.style.borderColor = getColorForButton(buttonTimeStart)
-
-                                checkBox.setAttribute("value", data[i].Zid + "-" + buttonTimeStart + "-" + buttonTimeEnd + "-" + data[i].LastModified)
-                                span.appendChild(button)
-                            }
-                            else if (j == 3) {
-                                button.innerHTML = ("14-16")
-                                var buttonTimeStart = getButtonTime(14)
-                                var buttonTimeEnd = getButtonTime(16)
-
-                                button.style.backgroundColor = getColorForButton(buttonTimeStart)
-                                button.style.borderColor = getColorForButton(buttonTimeStart)
-
-                                checkBox.setAttribute("value", data[i].Zid + "-" + buttonTimeStart + "-" + buttonTimeEnd + "-" + data[i].LastModified)
-                                span.appendChild(button)
-                            }
-                            else {
-                                button.innerHTML = ("16-18")
-                                var buttonTimeStart = getButtonTime(16)
-                                var buttonTimeEnd = getButtonTime(18)
-
-                                button.style.backgroundColor = getColorForButton(buttonTimeStart)
-                                button.style.borderColor = getColorForButton(buttonTimeStart)
-
-                                checkBox.setAttribute("value", data[i].Zid + "-" + buttonTimeStart + "-" + buttonTimeEnd + "-" + data[i].LastModified)
-                                span.appendChild(button)
-                            }
-
-                            span.appendChild(checkBox)
-
-                            parentdivRoom1.appendChild(span)
-
-                        }
-
-                    }
-                    else {
-
-
-                        parentdivRoom2.appendChild(Desk)
-
-                        for (var j = 0; j < timeButtons; j++) {
-                            timeBooked.length = 0
-                            ownerOfTimeBooked.length = 0
-                            var span = document.createElement('span')
-                            span.setAttribute("class", "button-checkbox")
-
-
-                            var checkBox = document.createElement('input')
-                            checkBox.setAttribute("class", "hidden")
-                            checkBox.type = "checkbox"
-
-                            var button = document.createElement('button')
-                            button.setAttribute("class", "btn btn-primary btn-lg")
-                            button.setAttribute("style", "margin-left: 2px")
-                            for (var k = 0; k < listOfBookings.length; k++) {
-                                if (data[i].Zid == listOfBookings[k].Zid) {
-                                    timeBooked.push(listOfBookings[k].From)
-                                    ownerOfTimeBooked.push(listOfBookings[k].Owner)
-                                }
-             
-                            }
-                            button.type = "button"
-
-                            if (j == 0) {
-                                button.innerHTML = "08-10"
-
-                                var buttonTimeStart = getButtonTime(8)
-                                var buttonTimeEnd = getButtonTime(10)
-
-                                button.style.backgroundColor = getColorForButton(buttonTimeStart)
-                                button.style.borderColor = getColorForButton(buttonTimeStart)
-
-                                checkBox.setAttribute("value", data[i].Zid + "-" + buttonTimeStart + "-" + buttonTimeEnd + "-" + data[i].LastModified)
-                                span.appendChild(button)
-                            }
-                            else if (j == 1) {
-                                button.innerHTML = ("10-12")
-                                var buttonTimeStart = getButtonTime(10)
-                                var buttonTimeEnd = getButtonTime(12)
-
-                                button.style.backgroundColor = getColorForButton(buttonTimeStart)
-                                button.style.borderColor = getColorForButton(buttonTimeStart)
-
-                                checkBox.setAttribute("value", data[i].Zid + "-" + buttonTimeStart + "-" + buttonTimeEnd + "-" + data[i].LastModified)
-                                span.appendChild(button)
-                            }
-                            else if (j == 2) {
-                                button.innerHTML = ("12-14")
-                                var buttonTimeStart = getButtonTime(12)
-                                var buttonTimeEnd = getButtonTime(14)
-
-                                button.style.backgroundColor = getColorForButton(buttonTimeStart)
-                                button.style.borderColor = getColorForButton(buttonTimeStart)
-
-                                checkBox.setAttribute("value", data[i].Zid + "-" + buttonTimeStart + "-" + buttonTimeEnd + "-" + data[i].LastModified)
-                                span.appendChild(button)
-                            }
-                            else if (j == 3) {
-                                button.innerHTML = ("14-16")
-                                var buttonTimeStart = getButtonTime(14)
-                                var buttonTimeEnd = getButtonTime(16)
-
-                                button.style.backgroundColor = getColorForButton(buttonTimeStart)
-                                button.style.borderColor = getColorForButton(buttonTimeStart)
-
-                                checkBox.setAttribute("value", data[i].Zid + "-" + buttonTimeStart + "-" + buttonTimeEnd + "-" + data[i].LastModified)
-                                span.appendChild(button)
-                            }
-                            else {
-                                button.innerHTML = ("16-18")
-                                var buttonTimeStart = getButtonTime(16)
-                                var buttonTimeEnd = getButtonTime(18)
-                               
-                                button.style.backgroundColor = getColorForButton(buttonTimeStart)
-                                button.style.borderColor = getColorForButton(buttonTimeStart)
-
-                                checkBox.setAttribute("value", data[i].Zid + "-" + buttonTimeStart + "-" + buttonTimeEnd + "-" + data[i].LastModified)
-                                span.appendChild(button)
-                            }
-
-                            span.appendChild(checkBox)
-                            parentdivRoom2.appendChild(span)
-                        }
-                    }
-
-                }
             checkboxsButton()
         },
 
@@ -314,16 +103,6 @@ function desks() {
 }
 
 function bookings() {
-    console.log(JSON.stringify({
-        "Owner": localStorage.getItem("user"),
-        "Lastmodified": lastModified,
-        "From": BookingStartTime,
-        "Until": BookingEndTime,
-        "Zids": listOfZid,
-        "Subject": "bookingtest",
-        "Private": "false"
-    }))
-
     $.ajax({
         url: "http://localhost:60156/api/bookingapi/multi/",
         type: "POST",
@@ -445,22 +224,3 @@ function checkboxsButton() {
         init();
     });
 };
-
-function getColorForButton(startTime) {
-    var indexOfBooking = timeBooked.indexOf(startTime);
-    if (indexOfBooking >= 0) {
-        if (ownerOfTimeBooked[indexOfBooking].toLowerCase() === localStorage.user.toLowerCase()) {
-            return "blue"
-        }
-        else {
-            return "red"
-        }
-    }
-    else {
-        return "green"
-    }
-}
-
-function getButtonTime(hour) {
-    return moment($('#date').value).set({'hour':hour, 'minute':0, 'second':0, 'millisecond': 0}).valueOf();
-}

@@ -269,6 +269,7 @@
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
+    <Content Include="Images\garbage.png" />
     <Content Include="Scripts\ai.0.22.9-build00167.js" />
     <Content Include="Scripts\ai.0.22.9-build00167.min.js" />
     <Content Include="Scripts\Booking.js" />
@@ -313,6 +314,7 @@
     <Content Include="Scripts\qunit-2.3.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\Service\BookingService.js" />
     <Content Include="Scripts\SHA256.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -333,9 +335,11 @@
     <Content Include="Views\Login\Login.cshtml" />
     <Content Include="Views\Booking\Bookings.cshtml" />
     <Content Include="Views\Test\Index.cshtml" />
+    <Content Include="Scripts\Test\Booking.Test.js" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Scripts\UI\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
