@@ -76,7 +76,7 @@ function getColorForButton(deskId, userName, startTime, bookings) {
             if (bookings[i].Owner == userName) {
                 return "blue"
             } else if (bookings[i].OwnerParent === studentId) {
-                return "yellow"
+                return "darkgoldenrod"
             } else if (bookings[i].OwnerParent === teacherId) {
                 return "violet"
             } else {
