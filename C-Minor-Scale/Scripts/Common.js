@@ -1,4 +1,4 @@
-﻿const twoHoursInMS = 720000;
+﻿const twoHoursInMS = 7200000;
 
 function getHeaders() {
     return {
