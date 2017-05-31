@@ -62,13 +62,15 @@ function StatusOfDesks(startTime, endTime) {
         },
 
         error: function (data) {
-            console.log(data.responseText.Message)
+            $("#ErrorModal .modal-body").empty()
             switch (data.status) {
                 case 400:
-                    alert("Select a valid date")
+                    $("#ErrorModal .modal-body").append("<p>Select a valid date</p>")
+                    $('#ErrorModal').modal('show')
                     break;
                 default:
-                    alert("Something went wrong, please try again")
+                    $("#ErrorModal .modal-body").append("<p>Something went wrong, please try again</p>")
+                    $('#ErrorModal').modal('show')
                     break;
             }
         }
@@ -104,9 +106,10 @@ function desks() {
             checkboxsButton()
         },
 
-        error: function (data)
-        {
-            alert(JSON.parse(data.responseText).Message)
+        error: function (data) {
+            $("#ErrorModal .modal-body").empty()
+            $("#ErrorModal .modal-body").append("<p>" + JSON.parse(data.responseText).Message + "</p>")
+            $('#ErrorModal').modal('show')
         }
     });
 
@@ -134,18 +137,21 @@ function bookings() {
         },
 
         error: function (data) {
+            $("#ErrorModal .modal-body").empty()
             switch (JSON.parse(data.responseText).Message) {
                 case "E_MULTI_BOOKING_PARTIALLY_FAILED":
-                    alert("Not all desks were successfully booked")
+                    $("#ErrorModal .modal-body").append("<p>Not all desks were successfully booked</p>")
+                    $('#ErrorModal').modal('show')
                     break;
                 case "E_MULTI_BOOKING_FAILED":
-                    alert("Something went wrong with your bookings")
+                    $("#ErrorModal .modal-body").append("<p>Something went wrong with your bookings, maybe the desk is already booked</p>")
+                    $('#ErrorModal').modal('show')
                     break;
                 default:
-                    alert("Something went wrong, please try again")
+                    $("#ErrorModal .modal-body").append("<p>Something went wrong, please try again</p>")
+                    $('#ErrorModal').modal('show')
                     break;
             }
-            console.log(data.responseText);
         }
     });
 }
@@ -173,18 +179,21 @@ function book() {
         },
 
         error: function (data) {
+            $("#ErrorModal .modal-body").empty()
             switch (JSON.parse(data.responseText).Message) {
                 case "E_MULTI_BOOKING_PARTIALLY_FAILED":
-                    alert("You can only book one desk as a student")
+                    $("#ErrorModal .modal-body").append("<p>You can only book one desk as a student</p>")
+                    $('#ErrorModal').modal('show')
                     break;
                 case "E_MULTI_BOOKING_FAILED":
-                    alert("Something went wrong with your bookings")
+                    $("#ErrorModal .modal-body").append("<p>Something went wrong with your bookings, maybe the desk is already booked</p>")
+                    $('#ErrorModal').modal('show')
                     break;
                 default:
-                    alert("Something went wrong, please try again")
+                    $("#ErrorModal .modal-body").append("<p>Something went wrong, please try again</p>")
+                    $('#ErrorModal').modal('show')
                     break;
             }
-            console.log(data.responseText);
         }
     });
 }
